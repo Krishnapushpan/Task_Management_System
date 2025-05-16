@@ -2,11 +2,10 @@ import React from 'react';
 
 
 const dropdownItems = [
-  'Add User',
   'Add Client',
-  'Add Teamlead',
-  'Add Team Member',
-  'Add Student',
+  // 'Add Teamlead',
+  // 'Add Team Member',
+  // 'Add Student',
 ];
 
 const CreateDropdown = ({ visible, onItemClick }) => {
