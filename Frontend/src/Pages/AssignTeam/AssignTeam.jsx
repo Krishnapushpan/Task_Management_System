@@ -213,109 +213,68 @@ const AssignTeam = () => {
           </Link>
         </div>
 
-        <form onSubmit={handleSubmit}>
-          <div className="assign-team-container">
-            {/* Project header with name and description */}
-            <div className="assign-team-project-header">
-              <div className="assign-team-project-name">{project.name}</div>
-              <div className="assign-team-project-description">
-                {project.description}
+        <div className="centered-content-wrapper">
+          <form onSubmit={handleSubmit}>
+            <div className="assign-team-container">
+              {/* Project header with name and description */}
+              <div className="assign-team-project-header">
+                <div className="assign-team-project-name">{project.name}</div>
+                <div className="assign-team-project-description">
+                  {project.description}
+                </div>
               </div>
-            </div>
 
-            {/* Project details section */}
-            <div className="assign-team-project-details">
-              <div className="assign-team-detail">
-                <div className="assign-team-detail-label">
-                  <FaCalendarAlt style={{ marginRight: "8px" }} />
-                  Start Date
+              {/* Project details section */}
+              <div className="assign-team-project-details">
+                <div className="assign-team-detail">
+                  <div className="assign-team-detail-label">
+                    <FaCalendarAlt style={{ marginRight: "8px" }} />
+                    Start Date
+                  </div>
+                  <div className="assign-team-detail-value">
+                    {project.startDate}
+                  </div>
                 </div>
-                <div className="assign-team-detail-value">
-                  {project.startDate}
+                <div className="assign-team-detail">
+                  <div className="assign-team-detail-label">
+                    <FaCalendarAlt style={{ marginRight: "8px" }} />
+                    Due Date
+                  </div>
+                  <div className="assign-team-detail-value">
+                    {project.dueDate}
+                  </div>
                 </div>
               </div>
-              <div className="assign-team-detail">
-                <div className="assign-team-detail-label">
-                  <FaCalendarAlt style={{ marginRight: "8px" }} />
-                  Due Date
-                </div>
-                <div className="assign-team-detail-value">
-                  {project.dueDate}
-                </div>
-              </div>
-            </div>
 
-            {/* Team selection sections */}
-            <div className="team-lead-section">
-              <div className="assign-team-section-title">
-                <FaUserTie style={{ marginRight: "8px" }} />
-                Select Team Lead (Choose 1)
-              </div>
-              <ul className="team-member-list">
-                {teamLeads.map((lead) => (
-                  <li
-                    key={lead.id}
-                    className={`team-member-item ${
-                      selectedTeamLead === lead.id ? "selected" : ""
-                    }`}
-                    onClick={() => handleTeamLeadSelect(lead.id)}
-                  >
-                    <input
-                      type="radio"
-                      className="team-member-checkbox"
-                      checked={selectedTeamLead === lead.id}
-                      onChange={() => handleTeamLeadSelect(lead.id)}
-                    />
-                    <div className="team-member-avatar">
-                      {getInitials(lead.name)}
-                    </div>
-                    <div className="team-member-details">
-                      <div className="team-member-name">{lead.name}</div>
-                      <div className="team-member-role">{lead.role}</div>
-                      <div className="member-skills">
-                        {lead.skills.map((skill, index) => (
-                          <span key={index} className="member-skill">
-                            {skill}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="assign-team-grid">
-              <div className="assign-team-section">
+              {/* Team selection sections */}
+              <div className="team-lead-section">
                 <div className="assign-team-section-title">
-                  <FaUsers style={{ marginRight: "8px" }} />
-                  Select Team Members
+                  <FaUserTie style={{ marginRight: "8px" }} />
+                  Select Team Lead (Choose 1)
                 </div>
                 <ul className="team-member-list">
-                  {teamMembers.map((member) => (
+                  {teamLeads.map((lead) => (
                     <li
-                      key={member.id}
+                      key={lead.id}
                       className={`team-member-item ${
-                        selectedTeamMembers.includes(member.id)
-                          ? "selected"
-                          : ""
+                        selectedTeamLead === lead.id ? "selected" : ""
                       }`}
-                      onClick={() => handleTeamMemberSelect(member.id)}
+                      onClick={() => handleTeamLeadSelect(lead.id)}
                     >
                       <input
-                        type="checkbox"
+                        type="radio"
                         className="team-member-checkbox"
-                        checked={selectedTeamMembers.includes(member.id)}
-                        onChange={() => handleTeamMemberSelect(member.id)}
+                        checked={selectedTeamLead === lead.id}
+                        onChange={() => handleTeamLeadSelect(lead.id)}
                       />
                       <div className="team-member-avatar">
-                        {getInitials(member.name)}
+                        {getInitials(lead.name)}
                       </div>
                       <div className="team-member-details">
-                        <div className="team-member-name">{member.name}</div>
-                        <div className="team-member-role">{member.role}</div>
+                        <div className="team-member-name">{lead.name}</div>
+                        <div className="team-member-role">{lead.role}</div>
                         <div className="member-skills">
-                          {member.skills.map((skill, index) => (
+                          {lead.skills.map((skill, index) => (
                             <span key={index} className="member-skill">
                               {skill}
                             </span>
@@ -327,54 +286,97 @@ const AssignTeam = () => {
                 </ul>
               </div>
 
-              <div className="assign-team-section">
-                <div className="assign-team-section-title">
-                  <FaUsers style={{ marginRight: "8px" }} />
-                  Select Students
-                </div>
-                <ul className="team-member-list">
-                  {students.map((student) => (
-                    <li
-                      key={student.id}
-                      className={`team-member-item ${
-                        selectedStudents.includes(student.id) ? "selected" : ""
-                      }`}
-                      onClick={() => handleStudentSelect(student.id)}
-                    >
-                      <input
-                        type="checkbox"
-                        className="team-member-checkbox"
-                        checked={selectedStudents.includes(student.id)}
-                        onChange={() => handleStudentSelect(student.id)}
-                      />
-                      <div className="team-member-avatar">
-                        {getInitials(student.name)}
-                      </div>
-                      <div className="team-member-details">
-                        <div className="team-member-name">{student.name}</div>
-                        <div className="team-member-role">{student.role}</div>
-                        <div className="member-skills">
-                          {student.skills.map((skill, index) => (
-                            <span key={index} className="member-skill">
-                              {skill}
-                            </span>
-                          ))}
+              <div className="assign-team-grid">
+                <div className="assign-team-section">
+                  <div className="assign-team-section-title">
+                    <FaUsers style={{ marginRight: "8px" }} />
+                    Select Team Members
+                  </div>
+                  <ul className="team-member-list">
+                    {teamMembers.map((member) => (
+                      <li
+                        key={member.id}
+                        className={`team-member-item ${
+                          selectedTeamMembers.includes(member.id)
+                            ? "selected"
+                            : ""
+                        }`}
+                        onClick={() => handleTeamMemberSelect(member.id)}
+                      >
+                        <input
+                          type="checkbox"
+                          className="team-member-checkbox"
+                          checked={selectedTeamMembers.includes(member.id)}
+                          onChange={() => handleTeamMemberSelect(member.id)}
+                        />
+                        <div className="team-member-avatar">
+                          {getInitials(member.name)}
                         </div>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
+                        <div className="team-member-details">
+                          <div className="team-member-name">{member.name}</div>
+                          <div className="team-member-role">{member.role}</div>
+                          <div className="member-skills">
+                            {member.skills.map((skill, index) => (
+                              <span key={index} className="member-skill">
+                                {skill}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="assign-team-section">
+                  <div className="assign-team-section-title">
+                    <FaUsers style={{ marginRight: "8px" }} />
+                    Select Students
+                  </div>
+                  <ul className="team-member-list">
+                    {students.map((student) => (
+                      <li
+                        key={student.id}
+                        className={`team-member-item ${
+                          selectedStudents.includes(student.id) ? "selected" : ""
+                        }`}
+                        onClick={() => handleStudentSelect(student.id)}
+                      >
+                        <input
+                          type="checkbox"
+                          className="team-member-checkbox"
+                          checked={selectedStudents.includes(student.id)}
+                          onChange={() => handleStudentSelect(student.id)}
+                        />
+                        <div className="team-member-avatar">
+                          {getInitials(student.name)}
+                        </div>
+                        <div className="team-member-details">
+                          <div className="team-member-name">{student.name}</div>
+                          <div className="team-member-role">{student.role}</div>
+                          <div className="member-skills">
+                            {student.skills.map((skill, index) => (
+                              <span key={index} className="member-skill">
+                                {skill}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              <div className="submit-button-container">
+                <button type="submit" className="submit-button">
+                  <FaCheckCircle style={{ marginRight: "10px" }} />
+                  Assign Team to Project
+                </button>
               </div>
             </div>
-
-            <div className="submit-button-container">
-              <button type="submit" className="submit-button">
-                <FaCheckCircle style={{ marginRight: "10px" }} />
-                Assign Team to Project
-              </button>
-            </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );
