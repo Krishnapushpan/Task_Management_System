@@ -40,30 +40,6 @@ const ProjectList = () => {
       status: "Work in Progress",
       assignee: "Techzaa Studio",
     },
-    {
-      id: 5,
-      name: "Velonic Admin v1.3",
-      startDate: "01/01/2015",
-      dueDate: "31/05/2015",
-      status: "Coming soon",
-      assignee: "Techzaa Studio",
-    },
-    {
-      id: 6,
-      name: "Velonic Admin v1.3",
-      startDate: "01/01/2015",
-      dueDate: "31/05/2015",
-      status: "Coming soon",
-      assignee: "Techzaa Studio",
-    },
-    {
-      id: 7,
-      name: "Velonic Admin v1.3",
-      startDate: "01/01/2015",
-      dueDate: "31/05/2015",
-      status: "Cool",
-      assignee: "Techzaa Studio",
-    },
   ];
 
   // Function to determine which CSS class to use for status badges
@@ -75,12 +51,6 @@ const ProjectList = () => {
         return "status-pending";
       case "work in progress":
         return "status-progress";
-      case "coming soon":
-        return "status-coming-soon";
-      case "cool":
-        return "status-cool";
-      default:
-        return "";
     }
   };
 

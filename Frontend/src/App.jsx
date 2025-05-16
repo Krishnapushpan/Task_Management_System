@@ -3,6 +3,8 @@ import { Toaster } from "react-hot-toast";
 import "./App.css";
 import Home from "./Pages/Home/Home";
 import AdminDashBoard from "./Pages/Admin/AdminDashBoard";
+import ViewMoreProjects from "./Pages/ViewMoreProjects/ViewMoreProjects";
+import AssignTeam from "./Pages/AssignTeam/AssignTeam";
 
 function App() {
   return (
@@ -39,7 +41,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/admin-dashboard" element={<AdminDashBoard />} />
-
+        <Route path="/view-more-projects" element={<ViewMoreProjects />} />
+        <Route path="/assign-project/:projectId" element={<AssignTeam />} />
       </Routes>
     </div>
   );
