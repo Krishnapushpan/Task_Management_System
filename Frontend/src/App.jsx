@@ -5,6 +5,8 @@ import Home from "./Pages/Home/Home";
 import AdminDashBoard from "./Pages/Admin/AdminDashBoard";
 import ViewMoreProjects from "./Pages/ViewMoreProjects/ViewMoreProjects";
 import AssignTeam from "./Pages/AssignTeam/AssignTeam";
+import Login from "./Pages/Signup_Login/Login";
+import Signup from "./Pages/Signup_Login/Signup";
 
 function App() {
   return (
@@ -43,6 +45,8 @@ function App() {
         <Route path="/admin-dashboard" element={<AdminDashBoard />} />
         <Route path="/view-more-projects" element={<ViewMoreProjects />} />
         <Route path="/assign-project/:projectId" element={<AssignTeam />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
     </div>
   );

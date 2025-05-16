@@ -30,7 +30,11 @@ const Sidebar = ({ onItemClick }) => {
       </div>
       <div className="sidebar-section sidebar-main">Main</div>
       <ul className="sidebar-menu">
-        <li className="active">
+        <li
+          className={onItemClick ? undefined : "active"}
+          onClick={() => onItemClick && onItemClick("Dashboard")}
+          style={{ cursor: 'pointer' }}
+        >
           <FaTachometerAlt className="sidebar-icon" />
           <span>Dashboard</span>
           {/* <span className="sidebar-badge blue">9+</span> */}
