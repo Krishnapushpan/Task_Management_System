@@ -1,7 +1,6 @@
 import React from "react";
 
 const dropdownItems = [
-  "User List",
   "Client List",
   "Teamlead List",
   "Team Member List",

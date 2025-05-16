@@ -3,10 +3,9 @@ import Sidebar from "../../Layouts/Sidebar";
 import CountUsers from "../../Components/CountUsers";
 import ProjectList from "../../Components/ProjectList";
 import UpcommingProject from "../../Components/UpcommingProject";
-import CreateStudent from "../CreateUSer/CreateStudent";
-import CreateTeamlead from "../CreateUSer/CreateTeamlead";
-import CreateTeamMember from "../CreateUSer/CreateTeamMember";
-import CreateClient from "../CreateUSer/CreateClient";
+import AddProject from "../AddProject/AddProject";
+import CreateUser from "../CreateUser/CreateUser";
+
 
 const AdminDashBoard = () => {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -16,7 +15,7 @@ const AdminDashBoard = () => {
   };
 
   return (
-    <div style={{ display: "flex" }}>
+    <div style={{ display: "flex" }} className="w-full">
       <Sidebar onItemClick={handleItemClick} />
       <div
         style={{
@@ -25,17 +24,14 @@ const AdminDashBoard = () => {
           flexDirection: "column",
           backgroundColor: "#f5f7fa",
           minHeight: "100vh",
-        }}
+          maxWidth: "100%",
+        }} className="w-full"
       >
         <div style={{ padding: "20px" }}>
-          {selectedItem === "Add Student" ? (
-            <CreateStudent />
-          ) : selectedItem === "Add Teamlead" ? (
-            <CreateTeamlead />
-          ) : selectedItem === "Add Team Member" ? (
-            <CreateTeamMember />
-          ) : selectedItem === "Add Client" ? (
-            <CreateClient />
+          {selectedItem === "Add Client" ? (
+            <CreateUser />
+          )  : selectedItem === "Add Project" ? (
+            <AddProject />
           ) : (
             <>
               <h1
@@ -49,7 +45,7 @@ const AdminDashBoard = () => {
                 Welcome!
               </h1>
               <CountUsers />
-              <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
+              <div style={{ display: "flex", gap: "20px", flexWrap: "wrap",  }}>
                 <div style={{ flex: "1.5", minWidth: "60%" }}>
                   <ProjectList />
                 </div>
