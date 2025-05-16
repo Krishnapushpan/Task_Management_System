@@ -25,22 +25,7 @@ const UpcomingProject = () => {
       startDate: "15/06/2023",
       dueDate: "30/08/2023",
     },
-    {
-      id: 2,
-      name: "Mobile App Development",
-      description:
-        "Create native mobile applications for iOS and Android platforms with cross-platform compatibility.",
-      startDate: "01/07/2023",
-      dueDate: "15/10/2023",
-    },
-    {
-      id: 3,
-      name: "API Integration",
-      description:
-        "Implement RESTful API services and integrate with third-party systems for seamless data exchange.",
-      startDate: "10/07/2023",
-      dueDate: "20/09/2023",
-    },
+    
   ];
 
   // Function to get initials from assignee name
