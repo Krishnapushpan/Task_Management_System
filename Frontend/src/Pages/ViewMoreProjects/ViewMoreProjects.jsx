@@ -4,6 +4,7 @@ import {
   FaCalendarAlt,
   FaClock,
   FaUserPlus,
+  FaUsers,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
@@ -50,6 +51,14 @@ const ViewMoreProjects = () => {
       startDate: "10/09/2023",
       dueDate: "20/12/2023",
     },
+    {
+      id: 8,
+      name: "Customer Relationship Management",
+      description:
+        "Create a robust CRM system with lead tracking, customer segmentation, and sales pipeline management.",
+      startDate: "15/09/2023",
+      dueDate: "25/12/2023",
+    },
   ];
 
   return (
@@ -61,47 +70,48 @@ const ViewMoreProjects = () => {
         </Link>
       </div>
 
-      <div className="view-more-projects-grid">
-        {additionalProjects.map((project) => (
-          <div key={project.id} className="upcoming-card">
-            <div className="upcoming-card-header">{project.name}</div>
-            <div className="upcoming-card-body">
-              <div className="upcoming-card-description">
-                {project.description}
-              </div>
-              <div className="upcoming-card-details">
-                <div className="upcoming-card-detail">
-                  <div className="upcoming-card-detail-label">
-                    <FaCalendarAlt
-                      style={{ marginRight: "8px", fontSize: "12px" }}
-                    />
-                    Start Date:
+      <div className="projects-container">
+        <div className="upcoming-projects-grid">
+          {additionalProjects.map((project) => (
+            <div key={project.id} className="upcoming-project-card">
+              <div className="upcoming-project-header">{project.name}</div>
+              <div className="upcoming-project-body">
+                <div className="upcoming-project-description">
+                  {project.description}
+                </div>
+                <div className="upcoming-project-details">
+                  <div className="upcoming-project-detail">
+                    <div className="upcoming-project-detail-label">
+                      <FaCalendarAlt />
+                      Start Date:
+                    </div>
+                    <div className="upcoming-project-detail-value">
+                      {project.startDate}
+                    </div>
                   </div>
-                  <div className="upcoming-card-detail-value">
-                    {project.startDate}
+                  <div className="upcoming-project-detail">
+                    <div className="upcoming-project-detail-label">
+                      <FaClock />
+                      Due Date:
+                    </div>
+                    <div className="upcoming-project-detail-value">
+                      {project.dueDate}
+                    </div>
                   </div>
                 </div>
-                <div className="upcoming-card-detail">
-                  <div className="upcoming-card-detail-label">
-                    <FaClock style={{ marginRight: "8px", fontSize: "12px" }} />
-                    Due Date:
-                  </div>
-                  <div className="upcoming-card-detail-value">
-                    {project.dueDate}
-                  </div>
-                </div>
               </div>
-
-              <Link
-                to={`/assign-project/${project.id}`}
-                className="assign-button"
-              >
-                <FaUserPlus className="assign-button-icon" />
-                Assign Team
-              </Link>
+              <div className="upcoming-project-footer">
+                <Link
+                  to={`/assign-project/${project.id}`}
+                  className="assign-project-button"
+                >
+                  <FaUsers className="assign-project-button-icon" />
+                  <span>Assign Team</span>
+                </Link>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

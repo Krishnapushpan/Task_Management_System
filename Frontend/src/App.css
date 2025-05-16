@@ -631,28 +631,6 @@ body {
   color: #6c757d;
 }
 
-.upcoming-priority {
-  padding: 3px 10px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.priority-high {
-  background-color: #ffe6ea;
-  color: #fa5c7c;
-}
-
-.priority-medium {
-  background-color: #fff8e0;
-  color: #ffbc00;
-}
-
-.priority-low {
-  background-color: #dcf5fb;
-  color: #21a6c8;
-}
-
 /* View More Link Styles */
 .view-more-container {
   display: flex;
@@ -682,22 +660,6 @@ body {
   color: #6658dd;
 }
 
-/* View More Projects Page Styles */
-.view-more-projects-page {
-  padding: 30px;
-  background-color: #f5f7fa;
-  min-height: 100vh;
-}
-
-.view-more-projects-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-}
-
-.view-more-projects-title {
-  font-size: 24px;
 /* Student Registration Form Styles */
 .student-form-container {
   display: flex;
@@ -724,413 +686,6 @@ body {
   color: #323a46;
 }
 
-.back-button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background: #fff;
-  border: 1px solid #e5e5e5;
-  border-radius: 4px;
-  color: #6c757d;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-  text-decoration: none;
-}
-
-.back-button:hover {
-  background: #f8f9fa;
-  color: #444;
-}
-
-.view-more-projects-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}
-
-@media (max-width: 1200px) {
-  .view-more-projects-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 768px) {
-  .view-more-projects-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Assign Button Styles */
-.assign-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background: #6658dd;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 8px 16px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s;
-  margin-top: 15px;
-  width: 100%;
-  text-decoration: none;
-}
-
-.assign-button:hover {
-  background: #5344c0;
-}
-
-.assign-button-icon {
-  font-size: 14px;
-}
-
-/* Enhanced Assign Team Page Styles */
-.assign-team-page {
-  background-color: #f5f7fa;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100vw;
-  max-width: 100%;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-}
-
-.assign-team-content {
-  width: 90%;
-  max-width: 1200px;
-  margin: 30px auto;
-  padding: 0;
-}
-
-.assign-team-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-  width: 100%;
-  padding: 0 20px;
-}
-
-.assign-team-container {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  width: 100%;
-  max-width: 100%;
-  margin: 0 auto;
-}
-
-.assign-team-project-header {
-  padding: 25px 30px;
-  background: linear-gradient(135deg, #6658dd 0%, #4e40c8 100%);
-  color: white;
-  text-align: center;
-  position: relative;
-  box-shadow: 0 4px 15px rgba(102, 88, 221, 0.1);
-  width: 100%;
-  margin: 0;
-}
-
-.assign-team-project-name {
-  font-size: 26px;
-  font-weight: 600;
-  margin-bottom: 10px;
-  letter-spacing: 0.5px;
-}
-
-.assign-team-project-description {
-  font-size: 16px;
-  opacity: 0.9;
-  line-height: 1.6;
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.assign-team-project-details {
-  display: flex;
-  justify-content: center;
-  padding: 25px 30px;
-  border-bottom: 1px solid #eef2f7;
-  background-color: #f8f9fa;
-  gap: 100px;
-  width: 100%;
-  margin: 0;
-  flex-wrap: wrap;
-}
-
-.assign-team-detail {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 150px;
-}
-
-.assign-team-detail-label {
-  font-size: 14px;
-  color: #6c757d;
-  margin-bottom: 8px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-}
-
-.assign-team-detail-label svg {
-  margin-right: 8px;
-}
-
-.assign-team-detail-value {
-  font-size: 16px;
-  color: #323a46;
-  font-weight: 500;
-}
-
-.assign-team-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 30px;
-  padding: 30px;
-  width: 100%;
-  margin: 0;
-}
-
-.assign-team-section {
-  padding: 0 30px 30px 30px;
-  width: 100%;
-  margin: 0;
-}
-
-.assign-team-section-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #323a46;
-  margin-bottom: 20px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #eef2f7;
-  text-align: center;
-  position: relative;
-  width: 100%;
-}
-
-.assign-team-section-title:after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 3px;
-  background: #6658dd;
-  border-radius: 1.5px;
-}
-
-.team-lead-section {
-  padding: 30px 30px 0 30px;
-  width: 100%;
-  margin: 0;
-}
-
-.team-member-list {
-  list-style: none;
-  margin-bottom: 20px;
-  width: 100%;
-}
-
-.team-member-item {
-  display: flex;
-  align-items: center;
-  padding: 12px 15px;
-  border: 1px solid #eef2f7;
-  border-radius: 6px;
-  margin-bottom: 12px;
-  transition: all 0.2s;
-  background-color: white;
-  width: 100%;
-}
-
-.team-member-item:hover {
-  background-color: #f8f9fa;
-  border-color: #6658dd;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-}
-
-.team-member-item.selected {
-  background-color: #f0f2ff;
-  border-color: #6658dd;
-  box-shadow: 0 3px 10px rgba(102, 88, 221, 0.1);
-}
-
-.team-member-checkbox {
-  margin-right: 15px;
-  width: 18px;
-  height: 18px;
-  accent-color: #6658dd;
-}
-
-.team-member-avatar {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #e1e1fc 0%, #c9c8ff 100%);
-  color: #6658dd;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 16px;
-  margin-right: 15px;
-  border: 2px solid white;
-  box-shadow: 0 2px 6px rgba(102, 88, 221, 0.15);
-}
-
-.team-member-details {
-  flex: 1;
-}
-
-.team-member-name {
-  font-size: 15px;
-  font-weight: 600;
-  color: #323a46;
-  margin-bottom: 3px;
-}
-
-.team-member-role {
-  font-size: 13px;
-  color: #6c757d;
-}
-
-.member-skills {
-  display: flex;
-  gap: 5px;
-  margin-top: 5px;
-  flex-wrap: wrap;
-}
-
-.member-skill {
-  font-size: 11px;
-  background: #f0f2ff;
-  color: #6658dd;
-  padding: 2px 8px;
-  border-radius: 12px;
-}
-
-.submit-button-container {
-  text-align: center;
-  padding: 20px 30px 30px 30px;
-  width: 100%;
-}
-
-.submit-button {
-  background: linear-gradient(135deg, #6658dd 0%, #4e40c8 100%);
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 14px 30px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 0 4px 15px rgba(102, 88, 221, 0.2);
-  min-width: 250px;
-}
-
-.submit-button:hover {
-  background: linear-gradient(135deg, #7568e2 0%, #5e51d1 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 88, 221, 0.3);
-}
-
-.submit-button:active {
-  transform: translateY(0);
-  box-shadow: 0 4px 10px rgba(102, 88, 221, 0.2);
-}
-
-/* Global styles to ensure full width */
-html, body {
-  width: 100%;
-  max-width: 100%;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-  box-sizing: border-box;
-}
-
-*, *:before, *:after {
-  box-sizing: inherit;
-}
-
-/* Remove any max-width constraints from parent containers */
-.container, 
-.container-fluid, 
-.row, 
-.col, 
-.col-md-12, 
-.col-lg-12, 
-.content-page, 
-.content-wrapper,
-main,
-.main-content {
-  max-width: 100% !important;
-  width: 100% !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-}
-
-@media (max-width: 992px) {
-  .assign-team-project-details {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 40px;
-  }
-  
-  .assign-team-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 768px) {
-  .assign-team-project-details {
-    gap: 20px;
-    padding: 20px;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .assign-team-project-header {
-    padding: 20px;
-  }
-  
-  .assign-team-grid {
-    padding: 20px;
-  }
-  
-  .assign-team-section {
-    padding: 0 20px 20px 20px;
-  }
-  
-  .team-lead-section {
-    padding: 20px 20px 0 20px;
-  }
-}
-
-.assign-team-title {
-  font-size: 24px;
-  font-weight: 600;
-  color: #323a46;
-}
 .student-form {
   display: flex;
   flex-direction: column;
@@ -1453,4 +1008,36 @@ main,
     padding: 32px 18px;
   }
 }
+
+/* Global styles to ensure full width */
+html, body {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+/* Remove any max-width constraints from parent containers */
+.container, 
+.container-fluid, 
+.row, 
+.col, 
+.col-md-12, 
+.col-lg-12, 
+.content-page, 
+.content-wrapper,
+main,
+.main-content {
+  max-width: 100% !important;
+  width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
 }
