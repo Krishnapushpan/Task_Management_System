@@ -1,8 +1,11 @@
 import { Route, Routes } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import "./App.css";
+import "./project.css";
 import Home from "./Pages/Home/Home";
 import AdminDashBoard from "./Pages/Admin/AdminDashBoard";
+import ViewMoreProjects from "./Pages/ViewMoreProjects/ViewMoreProjects";
+import AssignTeam from "./Pages/AssignTeam/AssignTeam";
 import Login from "./Pages/Signup_Login/Login";
 import Signup from "./Pages/Signup_Login/Signup";
 // import UserList from "./Pages/UserList";
@@ -42,6 +45,9 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/admin-dashboard" element={<AdminDashBoard />} />
         {/* <Route path="/user-list" element={<UserList />} /> */}
+
+        <Route path="/view-more-projects" element={<ViewMoreProjects />} />
+        <Route path="/assign-project/:projectId" element={<AssignTeam />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
       </Routes>
