@@ -16,7 +16,7 @@ export const registerUser = async (req, res) => {
 
         // Check if this is the first user (will be admin)
         const found = await User.findOne({ role: 'admin' });
-        let role = 'client';
+        let role = 'Client';
         if (!found) {
             role = 'admin';
         }
@@ -139,5 +139,77 @@ export const createUser = async (req, res) => {
     } catch (error) {
         console.error("User creation error:", error);
         res.status(500).json({ message: "User creation failed", error: error.message });
+    }
+};
+
+export const getClients = async (req, res) => {
+    try {
+        // Find all users with role 'client'
+        const clients = await User.find({ role: 'Client' })
+            .select('fullName email phone position') // Only select needed fields
+            .sort({ createdAt: -1 }); // Sort by newest first
+
+        res.status(200).json({
+            message: "Clients fetched successfully",
+            clients
+        });
+
+    } catch (error) {
+        console.error("Error fetching clients:", error);
+        res.status(500).json({ message: "Failed to fetch clients", error: error.message });
+    }
+};
+
+export const getTeamMembers = async (req, res) => {
+    try {
+        // Find all users with role 'Team Member'
+        const teamMembers = await User.find({ role: 'Team Member' })
+            .select('fullName email phone position') // Only select needed fields
+            .sort({ createdAt: -1 }); // Sort by newest first
+
+        res.status(200).json({
+            message: "Team members fetched successfully",
+            teamMembers
+        });
+
+    } catch (error) {
+        console.error("Error fetching team members:", error);
+        res.status(500).json({ message: "Failed to fetch team members", error: error.message });
+    }
+};
+
+export const getTeamLeads = async (req, res) => {
+    try {
+        // Find all users with role 'Team Lead'
+        const teamLeads = await User.find({ role: 'Team Lead' })
+            .select('fullName email phone position') // Only select needed fields
+            .sort({ createdAt: -1 }); // Sort by newest first
+
+        res.status(200).json({
+            message: "Team leads fetched successfully",
+            teamLeads
+        });
+
+    } catch (error) {
+        console.error("Error fetching team leads:", error);
+        res.status(500).json({ message: "Failed to fetch team leads", error: error.message });
+    }
+};
+
+export const getStudents = async (req, res) => {
+    try {
+        // Find all users with role 'Student'
+        const students = await User.find({ role: 'Student' })
+            .select('fullName email phone role') // Only select needed fields
+            .sort({ createdAt: -1 }); // Sort by newest first
+
+        res.status(200).json({
+            message: "Students fetched successfully",
+            students
+        });
+
+    } catch (error) {
+        console.error("Error fetching students:", error);
+        res.status(500).json({ message: "Failed to fetch students", error: error.message });
     }
 };

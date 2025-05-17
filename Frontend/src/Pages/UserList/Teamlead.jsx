@@ -1,50 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './List.css';
 
-const sampleTeamLeads = [
-  {
-    id: 1,
-    fullName: 'David Chen',
-    email: 'david.c@example.com',
-    phone: '123-456-7890',
-    position: 'Senior Frontend Lead',
-    project: 'Project Alpha',
-    teamSize: 5
-  },
-  {
-    id: 2,
-    fullName: 'Sophie Anderson',
-    email: 'sophie.a@example.com',
-    phone: '987-654-3210',
-    position: 'Senior Backend Lead',
-    project: 'Project Beta',
-    teamSize: 4
-  },
-  {
-    id: 3,
-    fullName: 'Michael Brown',
-    email: 'michael.b@example.com',
-    phone: '555-123-4567',
-    position: 'Design Team Lead',
-    project: 'Project Gamma',
-    teamSize: 3
-  },
-];
-
 const Teamlead = () => {
-  const [teamLeads, setTeamLeads] = useState(sampleTeamLeads);
+  const [teamLeads, setTeamLeads] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editLead, setEditLead] = useState(null);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    // Check if user is admin
+    const userData = JSON.parse(localStorage.getItem('user'));
+    setIsAdmin(userData?.role === 'admin');
+  }, []);
+
+  // Fetch team leads when component mounts
+  useEffect(() => {
+    fetchTeamLeads();
+  }, []);
+
+  const fetchTeamLeads = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get('/api/users/team-leads', {
+        withCredentials: true
+      });
+      setTeamLeads(response.data.teamLeads);
+      setError('');
+    } catch (error) {
+      setError('Failed to fetch team leads. Please try again later.');
+      console.error('Error fetching team leads:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleEdit = (id) => {
-    const lead = teamLeads.find(l => l.id === id);
+    const lead = teamLeads.find(l => l._id === id);
     setEditLead({ ...lead });
     setModalOpen(true);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this team lead?')) {
-      setTeamLeads(teamLeads.filter(lead => lead.id !== id));
+      try {
+        // Add delete API call here when implemented
+        // await axios.delete(`/api/users/${id}`);
+        setTeamLeads(teamLeads.filter(lead => lead._id !== id));
+      } catch (error) {
+        setError('Failed to delete team lead. Please try again.');
+      }
     }
   };
 
@@ -52,10 +59,16 @@ const Teamlead = () => {
     setEditLead({ ...editLead, [e.target.name]: e.target.value });
   };
 
-  const handleModalSave = () => {
-    setTeamLeads(teamLeads.map(l => l.id === editLead.id ? editLead : l));
-    setModalOpen(false);
-    setEditLead(null);
+  const handleModalSave = async () => {
+    try {
+      // Add update API call here when implemented
+      // await axios.put(`/api/users/${editLead._id}`, editLead);
+      setTeamLeads(teamLeads.map(l => l._id === editLead._id ? editLead : l));
+      setModalOpen(false);
+      setEditLead(null);
+    } catch (error) {
+      setError('Failed to update team lead. Please try again.');
+    }
   };
 
   const handleModalCancel = () => {
@@ -63,12 +76,17 @@ const Teamlead = () => {
     setEditLead(null);
   };
 
+  if (loading) {
+    return <div className="loading">Loading team leads...</div>;
+  }
+
   return (
     <div className="client-list-wrapper">
       <div className="project-list-container">
         <div className="project-list-header">
           <h2 className="project-list-title">Team Leads</h2>
         </div>
+        {error && <div className="error-message">{error}</div>}
         <div className="table-responsive">
           <table className="project-list-table">
             <thead>
@@ -78,25 +96,23 @@ const Teamlead = () => {
                 <th>Email</th>
                 <th>Phone Number</th>
                 <th>Position</th>
-                <th>Project</th>
-                <th>Team Size</th>
-                <th>Actions</th>
+                {isAdmin && <th>Actions</th>}
               </tr>
             </thead>
             <tbody>
               {teamLeads.map((lead, idx) => (
-                <tr key={lead.id}>
+                <tr key={lead._id}>
                   <td>{idx + 1}</td>
                   <td>{lead.fullName}</td>
                   <td>{lead.email}</td>
                   <td>{lead.phone}</td>
-                  <td>{lead.position}</td>
-                  <td>{lead.project}</td>
-                  <td>{lead.teamSize}</td>
-                  <td>
-                    <button className="client-edit-btn" onClick={() => handleEdit(lead.id)}>Edit</button>
-                    <button className="client-delete-btn" onClick={() => handleDelete(lead.id)}>Delete</button>
-                  </td>
+                  <td>{lead.position || 'N/A'}</td>
+                  {isAdmin && (
+                    <td>
+                      <button className="client-edit-btn" onClick={() => handleEdit(lead._id)}>Edit</button>
+                      <button className="client-delete-btn" onClick={() => handleDelete(lead._id)}>Delete</button>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -104,7 +120,7 @@ const Teamlead = () => {
         </div>
       </div>
 
-      {modalOpen && (
+      {modalOpen && isAdmin && (
         <div className="modal-overlay">
           <div className="modal-content">
             <h3>Edit Team Lead</h3>
@@ -139,28 +155,9 @@ const Teamlead = () => {
               <input
                 type="text"
                 name="position"
-                value={editLead.position}
+                value={editLead.position || ''}
                 onChange={handleModalChange}
                 className="modal-input"
-              />
-            </label>
-            <label className="modal-label">Project:
-              <input
-                type="text"
-                name="project"
-                value={editLead.project}
-                onChange={handleModalChange}
-                className="modal-input"
-              />
-            </label>
-            <label className="modal-label">Team Size:
-              <input
-                type="number"
-                name="teamSize"
-                value={editLead.teamSize}
-                onChange={handleModalChange}
-                className="modal-input"
-                min="1"
               />
             </label>
             <div className="modal-actions">
@@ -175,3 +172,4 @@ const Teamlead = () => {
 };
 
 export default Teamlead;
+

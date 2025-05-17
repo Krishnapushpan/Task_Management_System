@@ -1,44 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './List.css';
 
-const sampleStudents = [
-  {
-    id: 1,
-    fullName: 'John Smith',
-    email: 'john.smith@example.com',
-    phone: '123-456-7890',
-    role: 'Team Member'
-  },
-  {
-    id: 2,
-    fullName: 'Sarah Johnson',
-    email: 'sarah.j@example.com',
-    phone: '987-654-3210',
-    role: 'Team Lead'
-  },
-  {
-    id: 3,
-    fullName: 'Mike Wilson',
-    email: 'mike.w@example.com',
-    phone: '555-123-4567',
-    role: 'Team Member'
-  },
-];
-
 const StudentList = () => {
-  const [students, setStudents] = useState(sampleStudents);
+  const [students, setStudents] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editStudent, setEditStudent] = useState(null);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    // Check if user is admin
+    const userData = JSON.parse(localStorage.getItem('user'));
+    setIsAdmin(userData?.role === 'admin');
+  }, []);
+
+  // Fetch students when component mounts
+  useEffect(() => {
+    fetchStudents();
+  }, []);
+
+  const fetchStudents = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get('/api/users/students', {
+        withCredentials: true
+      });
+      setStudents(response.data.students);
+      setError('');
+    } catch (error) {
+      setError('Failed to fetch students. Please try again later.');
+      console.error('Error fetching students:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleEdit = (id) => {
-    const student = students.find(s => s.id === id);
+    const student = students.find(s => s._id === id);
     setEditStudent({ ...student });
     setModalOpen(true);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this student?')) {
-      setStudents(students.filter(student => student.id !== id));
+      try {
+        // Add delete API call here when implemented
+        // await axios.delete(`/api/users/${id}`);
+        setStudents(students.filter(student => student._id !== id));
+      } catch (error) {
+        setError('Failed to delete student. Please try again.');
+      }
     }
   };
 
@@ -46,10 +59,16 @@ const StudentList = () => {
     setEditStudent({ ...editStudent, [e.target.name]: e.target.value });
   };
 
-  const handleModalSave = () => {
-    setStudents(students.map(s => s.id === editStudent.id ? editStudent : s));
-    setModalOpen(false);
-    setEditStudent(null);
+  const handleModalSave = async () => {
+    try {
+      // Add update API call here when implemented
+      // await axios.put(`/api/users/${editStudent._id}`, editStudent);
+      setStudents(students.map(s => s._id === editStudent._id ? editStudent : s));
+      setModalOpen(false);
+      setEditStudent(null);
+    } catch (error) {
+      setError('Failed to update student. Please try again.');
+    }
   };
 
   const handleModalCancel = () => {
@@ -57,12 +76,17 @@ const StudentList = () => {
     setEditStudent(null);
   };
 
+  if (loading) {
+    return <div className="loading">Loading students...</div>;
+  }
+
   return (
     <div className="client-list-wrapper">
       <div className="project-list-container">
         <div className="project-list-header">
           <h2 className="project-list-title">Students</h2>
         </div>
+        {error && <div className="error-message">{error}</div>}
         <div className="table-responsive">
           <table className="project-list-table">
             <thead>
@@ -72,21 +96,23 @@ const StudentList = () => {
                 <th>Email</th>
                 <th>Phone Number</th>
                 <th>Role</th>
-                <th>Actions</th>
+                {isAdmin && <th>Actions</th>}
               </tr>
             </thead>
             <tbody>
               {students.map((student, idx) => (
-                <tr key={student.id}>
+                <tr key={student._id}>
                   <td>{idx + 1}</td>
                   <td>{student.fullName}</td>
                   <td>{student.email}</td>
                   <td>{student.phone}</td>
                   <td>{student.role}</td>
-                  <td>
-                    <button className="client-edit-btn" onClick={() => handleEdit(student.id)}>Edit</button>
-                    <button className="client-delete-btn" onClick={() => handleDelete(student.id)}>Delete</button>
-                  </td>
+                  {isAdmin && (
+                    <td>
+                      <button className="client-edit-btn" onClick={() => handleEdit(student._id)}>Edit</button>
+                      <button className="client-delete-btn" onClick={() => handleDelete(student._id)}>Delete</button>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -94,7 +120,7 @@ const StudentList = () => {
         </div>
       </div>
 
-      {modalOpen && (
+      {modalOpen && isAdmin && (
         <div className="modal-overlay">
           <div className="modal-content">
             <h3>Edit Student</h3>
@@ -146,3 +172,4 @@ const StudentList = () => {
 };
 
 export default StudentList;
+

@@ -81,13 +81,15 @@ const Sidebar = ({ onItemClick }) => {
             <CreateDropdown visible={dropdownOpen} onItemClick={onItemClick} />
           </>
         )}
-        <li
-          onClick={() => onItemClick && onItemClick("Add Project")}
-          style={{ cursor: 'pointer' }}
-        >
-          <FaLayerGroup className="sidebar-icon" />
-          <span>Add Project</span>
-        </li>
+        { (userRole === 'admin' || userRole === 'Client') && (
+          <li
+            onClick={() => onItemClick && onItemClick("Add Project")}
+            style={{ cursor: 'pointer' }}
+          >
+            <FaLayerGroup className="sidebar-icon" />
+            <span>Add Project</span>
+          </li>
+        )}
         <li
           onClick={() => {
             setUserDropdownOpen((open) => !open);

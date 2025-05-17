@@ -1,44 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './List.css';
 
-const sampleClients = [
-  {
-    id: 1,
-    fullName: 'John Doe',
-    email: 'john@example.com',
-    phone: '123-456-7890',
-    project: 'Project Alpha',
-  },
-  {
-    id: 2,
-    fullName: 'Jane Smith',
-    email: 'jane@example.com',
-    phone: '987-654-3210',
-    project: 'Project Beta',
-  },
-  {
-    id: 3,
-    fullName: 'Alice Johnson',
-    email: 'alice@example.com',
-    phone: '555-123-4567',
-    project: 'Project Gamma',
-  },
-];
-
 const ClientList = () => {
-  const [clients, setClients] = useState(sampleClients);
+  const [clients, setClients] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editClient, setEditClient] = useState(null);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    // Check if user is admin
+    const userData = JSON.parse(localStorage.getItem('user'));
+    setIsAdmin(userData?.role === 'admin');
+  }, []);
+
+  // Fetch clients when component mounts
+  useEffect(() => {
+    fetchClients();
+  }, []);
+
+  const fetchClients = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get('/api/users/clients', {
+        withCredentials: true
+      });
+      setClients(response.data.clients);
+      setError('');
+    } catch (error) {
+      setError('Failed to fetch clients. Please try again later.');
+      console.error('Error fetching clients:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleEdit = (id) => {
-    const client = clients.find(c => c.id === id);
+    const client = clients.find(c => c._id === id);
     setEditClient({ ...client });
     setModalOpen(true);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this client?')) {
-      setClients(clients.filter(client => client.id !== id));
+      try {
+        // Add delete API call here when implemented
+        // await axios.delete(`/api/users/${id}`);
+        setClients(clients.filter(client => client._id !== id));
+      } catch (error) {
+        setError('Failed to delete client. Please try again.');
+      }
     }
   };
 
@@ -46,10 +59,16 @@ const ClientList = () => {
     setEditClient({ ...editClient, [e.target.name]: e.target.value });
   };
 
-  const handleModalSave = () => {
-    setClients(clients.map(c => c.id === editClient.id ? editClient : c));
-    setModalOpen(false);
-    setEditClient(null);
+  const handleModalSave = async () => {
+    try {
+      // Add update API call here when implemented
+      // await axios.put(`/api/users/${editClient._id}`, editClient);
+      setClients(clients.map(c => c._id === editClient._id ? editClient : c));
+      setModalOpen(false);
+      setEditClient(null);
+    } catch (error) {
+      setError('Failed to update client. Please try again.');
+    }
   };
 
   const handleModalCancel = () => {
@@ -57,12 +76,17 @@ const ClientList = () => {
     setEditClient(null);
   };
 
+  if (loading) {
+    return <div className="loading">Loading clients...</div>;
+  }
+
   return (
     <div className="client-list-wrapper">
       <div className="project-list-container">
         <div className="project-list-header">
           <h2 className="project-list-title">Clients</h2>
         </div>
+        {error && <div className="error-message">{error}</div>}
         <div className="table-responsive">
           <table className="project-list-table">
             <thead>
@@ -71,22 +95,24 @@ const ClientList = () => {
                 <th>Full Name</th>
                 <th>Email</th>
                 <th>Phone Number</th>
-                <th>Project</th>
-                <th>Actions</th>
+                <th>Position</th>
+                {isAdmin && <th>Actions</th>}
               </tr>
             </thead>
             <tbody>
               {clients.map((client, idx) => (
-                <tr key={client.id}>
+                <tr key={client._id}>
                   <td>{idx + 1}</td>
                   <td>{client.fullName}</td>
                   <td>{client.email}</td>
                   <td>{client.phone}</td>
-                  <td>{client.project}</td>
-                  <td>
-                    <button className="client-edit-btn" onClick={() => handleEdit(client.id)}>Edit</button>
-                    <button className="client-delete-btn" onClick={() => handleDelete(client.id)}>Delete</button>
-                  </td>
+                  <td>{client.position || 'N/A'}</td>
+                  {isAdmin && (
+                    <td>
+                      <button className="client-edit-btn" onClick={() => handleEdit(client._id)}>Edit</button>
+                      <button className="client-delete-btn" onClick={() => handleDelete(client._id)}>Delete</button>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -94,7 +120,7 @@ const ClientList = () => {
         </div>
       </div>
 
-      {modalOpen && (
+      {modalOpen && isAdmin && (
         <div className="modal-overlay">
           <div className="modal-content">
             <h3>Edit Client</h3>
@@ -125,11 +151,11 @@ const ClientList = () => {
                 className="modal-input"
               />
             </label>
-            <label className="modal-label">Project:
+            <label className="modal-label">Position:
               <input
                 type="text"
-                name="project"
-                value={editClient.project}
+                name="position"
+                value={editClient.position || ''}
                 onChange={handleModalChange}
                 className="modal-input"
               />
