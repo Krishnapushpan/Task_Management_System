@@ -3,6 +3,7 @@ import express, { json } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import apiRoutes from './src/apiUsersRoutes.js';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 const app = express();
@@ -10,9 +11,11 @@ const app = express();
 app.use(
     cors({ 
       origin: "http://localhost:3000",
+      credentials: true
     })
 );
 app.use(json());
+app.use(cookieParser());
 
 // Use API routes
 app.use('/', apiRoutes);

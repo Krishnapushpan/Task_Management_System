@@ -3,7 +3,7 @@ import userRoutes from "./User/routes/UsersRoute.js";
 
 const router = express.Router();
 
-// Mount all routes with their respective paths
+// Mount user routes
 router.use("/users", userRoutes);
 
 export default router;

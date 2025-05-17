@@ -1,17 +1,35 @@
 import React, { useState } from 'react';
 import { FiMail, FiLock } from 'react-icons/fi';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
+  const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    setError(''); // Clear error when user types
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle login logic here
-    alert(JSON.stringify(form, null, 2));
+    try {
+      const response = await axios.post('/api/users/login', {
+        email: form.email,
+        password: form.password
+      });
+
+      if (response.data.status) {
+        // Store user data in localStorage
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+        // Navigate to AdminDashboard
+        navigate('/admin-dashboard');
+      }
+    } catch (error) {
+      setError(error.response?.data?.error || 'Login failed. Please try again.');
+    }
   };
 
   return (
@@ -64,6 +82,9 @@ const Login = () => {
                 required
               />
             </div>
+            {error && (
+              <span className="student-form-error">{error}</span>
+            )}
             <button type="submit" className="login-btn">Sign In</button>
           </form>
           <div className="login-signup-row">

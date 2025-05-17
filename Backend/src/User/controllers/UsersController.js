@@ -1,5 +1,8 @@
 import User from '../models/UsersModel.js';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+dotenv.config();
 
 export const registerUser = async (req, res) => {
     try {
@@ -45,5 +48,52 @@ export const registerUser = async (req, res) => {
     } catch (error) {
         console.error("Registration error:", error);
         res.status(500).json({ message: "Registration failed", error: error.message });
+    }
+};
+
+export const loginUser = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        
+        // Find user by email
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(401).json({ error: "Authentication failed - User doesn't exist" });
+        }
+
+        // Compare password
+        const passwordMatch = await bcrypt.compare(password, user.password);
+        if (!passwordMatch) {
+            return res.status(401).json({ error: "Authentication failed - Password doesn't match" });
+        }
+
+        // Generate JWT token
+        const token = jwt.sign(
+            { 
+                email: user.email, 
+                role: user.role,
+                fullName: user.fullName 
+            },
+            process.env.SECRET_KEY,
+            { expiresIn: "1h" }
+        );
+
+        // Set cookie
+        res.cookie("Authtoken", token);
+
+        // Send response
+        res.json({
+            status: true,
+            message: "Login success",
+            user: {
+                fullName: user.fullName,
+                email: user.email,
+                role: user.role
+            }
+        });
+
+    } catch (error) {
+        console.error("Login error:", error);
+        res.status(500).json({ error: "Login failed" });
     }
 };
