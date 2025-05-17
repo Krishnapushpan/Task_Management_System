@@ -11,7 +11,7 @@ export const createProject = async (req, res) => {
       role !== "admin" &&
       role !== "Client" &&
       role !== "Admin"
-    ) {
+    ) { 
       return res.status(403).json({ message: "Access denied" });
     } else {
       // Create new project
@@ -21,7 +21,7 @@ export const createProject = async (req, res) => {
         startDate,
         endDate,
         budget,
-        createdBy: req.userId, // Get userId from auth middleware
+        // createdBy: req.userId, // Get userId from auth middleware
       });
 
       // Save project to database

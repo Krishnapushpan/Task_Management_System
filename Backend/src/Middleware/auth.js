@@ -9,12 +9,10 @@ function verifyToken(req, res, next) {
     (req.headers.authorization && req.headers.authorization.split(" ")[1]);
 
   if (!token) return res.status(401).json({ error: "Access denied" });
-  console.log("Token received:", token);
 
   try {
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
     req.role = decoded.role;
-    req.userId = decoded._id || decoded.id;
     req.email = decoded.email;
     req.fullName = decoded.fullName;
     next();
