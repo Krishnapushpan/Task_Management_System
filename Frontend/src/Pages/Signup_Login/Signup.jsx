@@ -10,6 +10,7 @@ const Signup = () => {
     email: '',
     phone: '',
     password: '',
+    position: null
   });
   const [passwordError, setPasswordError] = useState('');
   const [error, setError] = useState('');
@@ -37,7 +38,8 @@ const Signup = () => {
         fullName: form.fullName,
         email: form.email,
         phone: form.phone,
-        password: form.password
+        password: form.password,
+        position: form.position
       });
 
       if (response.data) {

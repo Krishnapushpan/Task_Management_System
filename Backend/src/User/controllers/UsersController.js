@@ -6,7 +6,7 @@ dotenv.config();
 
 export const registerUser = async (req, res) => {
     try {
-        const { fullName, email, phone, password } = req.body;
+        const { fullName, email, phone, password, position } = req.body;
 
         // Check if user already exists
         const existingUser = await User.findOne({ email });
@@ -30,7 +30,8 @@ export const registerUser = async (req, res) => {
             email,
             phone,
             password: hashedPassword,
-            role
+            role,
+            position // Set position as null by default
         });
 
         // Save user to database
@@ -41,7 +42,8 @@ export const registerUser = async (req, res) => {
             user: {
                 fullName: newUser.fullName,
                 email: newUser.email,
-                role: newUser.role
+                role: newUser.role,
+                position: newUser.position
             }
         });
 
