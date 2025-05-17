@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import { FiMail, FiLock, FiUser, FiPhone, FiUserCheck } from 'react-icons/fi';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     fullName: '',
     email: '',
     phone: '',
-    gender: '',
     password: '',
-    confirmPassword: '',
-    role: 'Client',
   });
   const [passwordError, setPasswordError] = useState('');
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -22,18 +23,31 @@ const Signup = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+
     if (form.password.length < 6) {
       setPasswordError('Minimum of 6 characters');
       return;
     }
-    if (form.password !== form.confirmPassword) {
-      setPasswordError('Passwords do not match');
-      return;
+
+    try {
+      const response = await axios.post('/api/users/register', {
+        fullName: form.fullName,
+        email: form.email,
+        phone: form.phone,
+        password: form.password
+      });
+
+      if (response.data) {
+        // Show success message and redirect to login
+        alert('Registration successful! Please login.');
+        navigate('/login');
+      }
+    } catch (error) {
+      setError(error.response?.data?.message || 'Registration failed. Please try again.');
     }
-    // Submit logic here
-    alert(JSON.stringify(form, null, 2));
   };
 
   return (
@@ -91,33 +105,6 @@ const Signup = () => {
                 required
               />
             </div>
-            {/* <div className="student-form-gender-row" style={{marginBottom: 0}}>
-              Gender:
-              <label className="student-form-gender-label">
-                <input
-                  type="radio"
-                  name="gender"
-                  value="Male"
-                  checked={form.gender === 'Male'}
-                  onChange={handleChange}
-                  required
-                  className="student-form-radio"
-                />
-                Male
-              </label>
-              <label className="student-form-gender-label">
-                <input
-                  type="radio"
-                  name="gender"
-                  value="Female"
-                  checked={form.gender === 'Female'}
-                  onChange={handleChange}
-                  required
-                  className="student-form-radio"
-                />
-                Female
-              </label>
-            </div> */}
             <div className="login-input-wrapper">
               <FiLock className="login-input-icon" />
               <input
@@ -130,21 +117,11 @@ const Signup = () => {
                 required
               />
             </div>
-            <div className="login-input-wrapper">
-              <FiLock className="login-input-icon" />
-              <input
-                type="password"
-                name="confirmPassword"
-                value={form.confirmPassword}
-                onChange={handleChange}
-                placeholder="Confirm Password"
-                className="login-input"
-                required
-              />
-            </div>
-            <input type="hidden" name="role" value="Client" />
             {passwordError && (
               <span className="student-form-error">{passwordError}</span>
+            )}
+            {error && (
+              <span className="student-form-error">{error}</span>
             )}
             <button type="submit" className="login-btn">Sign Up</button>
           </form>

@@ -1,0 +1,28 @@
+import mongoose from "mongoose"; 
+import express, { json } from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import apiRoutes from './src/apiUsersRoutes.js';
+
+dotenv.config();
+const app = express();
+
+app.use(
+    cors({ 
+      origin: "http://localhost:3000",
+    })
+);
+app.use(json());
+
+// Use API routes
+app.use('/', apiRoutes);
+
+mongoose.connect('mongodb://localhost:27017/Task_management')
+  .then(() => console.log("MongoDB Connected"))
+  .catch(err => console.error("MongoDB Connection Error:", err));
+
+const port = process.env.PORT;
+app.listen(port, () => {
+    console.log(`server is listening to ${port}`);
+});
+
