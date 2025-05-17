@@ -5,7 +5,10 @@ import ProjectList from "../../Components/ProjectList";
 import UpcommingProject from "../../Components/UpcommingProject";
 import AddProject from "../AddProject/AddProject";
 import CreateUser from "../CreateUser/CreateUser";
-
+import ClientList from "../UserList/ClientList";
+import StudentList from "../UserList/StudentList";
+import TeamMember from "../UserList/TeamMember";
+import Teamlead from "../UserList/Teamlead";
 
 const AdminDashBoard = () => {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -30,8 +33,16 @@ const AdminDashBoard = () => {
         <div style={{ padding: "20px" }}>
           {selectedItem === "Add Client" ? (
             <CreateUser />
-          )  : selectedItem === "Add Project" ? (
+          ) : selectedItem === "Add Project" ? (
             <AddProject />
+          ) : selectedItem === "Client List" ? (
+            <ClientList />
+          ) : selectedItem === "Student List" ? (
+            <StudentList />
+          ) : selectedItem === "Team Member List" ? (
+            <TeamMember />
+          ) : selectedItem === "Team Lead List" ? (
+            <Teamlead />
           ) : (
             <>
               <h1
