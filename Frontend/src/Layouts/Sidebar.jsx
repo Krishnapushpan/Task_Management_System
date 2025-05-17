@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaTachometerAlt,
   FaFileAlt,
@@ -18,6 +18,16 @@ import Userdropdown from "../Components/Dropdowns/Userdropdown";
 const Sidebar = ({ onItemClick }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [userRole, setUserRole] = useState(null);
+
+  useEffect(() => {
+    // Get user data from localStorage
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      const { role } = JSON.parse(userData);
+      setUserRole(role);
+    }
+  }, []);
 
   return (
     <div className="sidebar">
@@ -39,23 +49,27 @@ const Sidebar = ({ onItemClick }) => {
           <span>Dashboard</span>
           {/* <span className="sidebar-badge blue">9+</span> */}
         </li>
-        <li
-          onClick={() => setDropdownOpen((open) => !open)}
-          style={{ color: dropdownOpen ? "#64c5b1" : undefined }}
-        >
-          <FaFileAlt className="sidebar-icon" />
-          <span>Add User</span>
-          <span
-            className="sidebar-arrow"
-            style={{
-              transform: dropdownOpen ? "rotate(90deg)" : "none",
-              color: dropdownOpen ? "#64c5b1" : undefined,
-            }}
-          >
-            &#8250;
-          </span>
-        </li>
-        <CreateDropdown visible={dropdownOpen} onItemClick={onItemClick} />
+        {userRole === 'admin' && (
+          <>
+            <li
+              onClick={() => setDropdownOpen((open) => !open)}
+              style={{ color: dropdownOpen ? "#64c5b1" : undefined }}
+            >
+              <FaFileAlt className="sidebar-icon" />
+              <span>Add User</span>
+              <span
+                className="sidebar-arrow"
+                style={{
+                  transform: dropdownOpen ? "rotate(90deg)" : "none",
+                  color: dropdownOpen ? "#64c5b1" : undefined,
+                }}
+              >
+                &#8250;
+              </span>
+            </li>
+            <CreateDropdown visible={dropdownOpen} onItemClick={onItemClick} />
+          </>
+        )}
         <li
           onClick={() => onItemClick && onItemClick("Add Project")}
           style={{ cursor: 'pointer' }}

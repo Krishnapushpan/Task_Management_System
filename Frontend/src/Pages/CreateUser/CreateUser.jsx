@@ -11,7 +11,6 @@ const CreateUser = () => {
     position: '',
     gender: '',
     password: '',
-    confirmPassword: '',
   });
   const [passwordError, setPasswordError] = useState('');
   const [roleDropdownVisible, setRoleDropdownVisible] = useState(false);
@@ -34,10 +33,6 @@ const CreateUser = () => {
     e.preventDefault();
     if (form.password.length < 6) {
       setPasswordError('Minimum of 6 characters');
-      return;
-    }
-    if (form.password !== form.confirmPassword) {
-      setPasswordError('Passwords do not match');
       return;
     }
     // Submit logic here
@@ -115,31 +110,17 @@ const CreateUser = () => {
                 </label>
               </div>
             )}
-            <div className="create-user-password-row">
-              <div className="create-user-form-group">
-                <label>Password:
-                  <input
-                    type="password"
-                    name="password"
-                    value={form.password}
-                    onChange={handleChange}
-                    placeholder="Password"
-                    required
-                  />
-                </label>
-              </div>
-              <div className="create-user-form-group">
-                <label>Confirm Password:
-                  <input
-                    type="password"
-                    name="confirmPassword"
-                    value={form.confirmPassword}
-                    onChange={handleChange}
-                    placeholder="Confirm Password"
-                    required
-                  />
-                </label>
-              </div>
+            <div className="create-user-form-group">
+              <label>Password:
+                <input
+                  type="password"
+                  name="password"
+                  value={form.password}
+                  onChange={handleChange}
+                  placeholder="Password"
+                  required
+                />
+              </label>
             </div>
             {passwordError && (
               <span className="student-form-error">{passwordError}</span>
