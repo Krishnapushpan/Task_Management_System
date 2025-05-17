@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   FaTachometerAlt,
   FaFileAlt,
@@ -11,11 +12,13 @@ import {
   FaTable,
   FaMapMarkerAlt,
   FaShareAlt,
+  FaSignOutAlt,
 } from "react-icons/fa";
 import CreateDropdown from "../Components/Dropdowns/CreateDropdown";
 import Userdropdown from "../Components/Dropdowns/Userdropdown";
 
 const Sidebar = ({ onItemClick }) => {
+  const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [userRole, setUserRole] = useState(null);
@@ -28,6 +31,14 @@ const Sidebar = ({ onItemClick }) => {
       setUserRole(role);
     }
   }, []);
+
+  const handleLogout = () => {
+    // Remove user data from localStorage
+    localStorage.removeItem('user');
+    // Clear browser history and navigate to home page
+    window.history.pushState(null, '', '/');
+    navigate('/', { replace: true });
+  };
 
   return (
     <div className="sidebar">
@@ -103,6 +114,23 @@ const Sidebar = ({ onItemClick }) => {
           <span className="sidebar-badge yellow">New</span>
         </li> */}
       </ul>
+      {/* Logout Button */}
+      <div className="sidebar-footer">
+        <li
+          onClick={handleLogout}
+          style={{ 
+            cursor: 'pointer',
+            color: '#dc3545',
+            display: 'flex',
+            alignItems: 'center',
+            padding: '10px 15px',
+            marginTop: 'auto'
+          }}
+        >
+          <FaSignOutAlt className="sidebar-icon" />
+          <span>Logout</span>
+        </li>
+      </div>
     </div>
   );
 };

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
+  const navigate = useNavigate();
 
   const handleAddTask = (e) => {
     e.preventDefault();
@@ -22,6 +24,10 @@ const Home = () => {
     setTasks(tasks.filter(task => task.id !== taskId));
   };
 
+  const handleSignIn = () => {
+    navigate('/login');
+  };
+
   return (
     <div>
       {/* Header/Navbar */}
@@ -35,7 +41,7 @@ const Home = () => {
           <a href="#resources">Resources</a>
         </nav>
         <div className="navbar-right">
-          <button className="sign-in-btn">SIGN IN</button>
+          <button className="sign-in-btn" onClick={handleSignIn}>SIGN IN</button>
         </div>
       </header>
 

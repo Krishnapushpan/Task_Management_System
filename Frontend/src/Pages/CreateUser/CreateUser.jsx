@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './User.css';
 import UserRoleDropdown from '../../Components/Dropdowns/RoleDropdown';
+import axios from 'axios';
 
 const CreateUser = () => {
   const [form, setForm] = useState({
@@ -14,6 +15,8 @@ const CreateUser = () => {
   });
   const [passwordError, setPasswordError] = useState('');
   const [roleDropdownVisible, setRoleDropdownVisible] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -29,14 +32,37 @@ const CreateUser = () => {
     setRoleDropdownVisible(false);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    setSuccess('');
+
     if (form.password.length < 6) {
       setPasswordError('Minimum of 6 characters');
       return;
     }
-    // Submit logic here
-    alert(JSON.stringify(form, null, 2));
+
+    try {
+      const response = await axios.post('/api/users/create', form, {
+        withCredentials: true
+      });
+
+      if (response.data) {
+        setSuccess('User created successfully!');
+        // Clear form
+        setForm({
+          fullName: '',
+          email: '',
+          phone: '',
+          role: '',
+          position: '',
+          gender: '',
+          password: '',
+        });
+      }
+    } catch (error) {
+      setError(error.response?.data?.message || 'Failed to create user');
+    }
   };
 
   return (
@@ -44,6 +70,8 @@ const CreateUser = () => {
       <div className="create-user-container">
         <div className="create-user-form-section">
           <h2 className="create-user-title">Client Registration Form</h2>
+          {error && <div className="error-message">{error}</div>}
+          {success && <div className="success-message">{success}</div>}
           <form onSubmit={handleSubmit}>
             <div className="create-user-form-group">
               <label>Full Name:
