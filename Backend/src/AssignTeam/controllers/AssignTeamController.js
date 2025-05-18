@@ -35,6 +35,10 @@ export const assignTeam = async (req, res) => {
       existingAssignment.teamMembers =
         teamMemberIds || existingAssignment.teamMembers;
       existingAssignment.students = studentIds || existingAssignment.students;
+      if (req.body.projectName) existingAssignment.projectName = req.body.projectName;
+      if (req.body.description) existingAssignment.description = req.body.description;
+      if (req.body.startDate) existingAssignment.startDate = req.body.startDate;
+      if (req.body.dueDate) existingAssignment.dueDate = req.body.dueDate;
 
       await existingAssignment.save();
 
@@ -58,6 +62,10 @@ export const assignTeam = async (req, res) => {
         teamLead: teamLeadId,
         teamMembers: teamMemberIds,
         students: studentIds,
+        projectName: req.body.projectName,
+        description: req.body.description,
+        startDate: req.body.startDate,
+        dueDate: req.body.dueDate,
       });
 
       await newAssignment.save();
@@ -126,5 +134,21 @@ export const getAllTeamAssignments = async (req, res) => {
       message: "Failed to get team assignments",
       error: error.message,
     });
+  }
+};
+
+export const updateAssignmentStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    const assignment = await AssignTeam.findById(id);
+    if (!assignment) {
+      return res.status(404).json({ message: "Assignment not found" });
+    }
+    assignment.status = status;
+    await assignment.save();
+    res.status(200).json({ message: "Status updated", assignment });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update status", error: error.message });
   }
 };

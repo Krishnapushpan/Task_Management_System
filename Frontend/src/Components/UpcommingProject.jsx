@@ -17,6 +17,7 @@ const UpcomingProject = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [projects, setProjects] = useState([]);
   const [error, setError] = useState("");
+  const [userRole, setUserRole] = useState(null);
 
   // Function to fetch projects from API
   const fetchProjects = async () => {
@@ -52,6 +53,11 @@ const UpcomingProject = () => {
   // Fetch projects on component mount
   useEffect(() => {
     fetchProjects();
+    // Get user role from localStorage
+    const userData = JSON.parse(localStorage.getItem("user"));
+    setUserRole(userData?.role);
+    console.log(userData?.role);
+    
   }, []);
 
   // Function to refresh the project list
@@ -160,6 +166,11 @@ const UpcomingProject = () => {
                         </div>
                       </div>
                     </div>
+                    {userRole === "admin" && (
+                      <Link to={`/assign-project/${project._id}`} className="assign-project-button">
+                        Assign Team
+                      </Link>
+                    )}
                   </div>
                 </div>
               ))}

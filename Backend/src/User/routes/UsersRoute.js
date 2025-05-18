@@ -8,6 +8,8 @@ import {
   getTeamLeads,
   getStudents,
   getUserCounts,
+  updateUser,
+  deleteUser,
 } from "../controllers/UsersController.js";
 
 const router = express.Router();
@@ -35,5 +37,11 @@ router.get("/students", getStudents);
 
 // Get user counts route (temporarily removed auth for testing)
 router.get("/counts", getUserCounts);
+
+// Update user by ID
+router.put("/:id", updateUser);
+
+// Delete user by ID
+router.delete("/:id", deleteUser);
 
 export default router;

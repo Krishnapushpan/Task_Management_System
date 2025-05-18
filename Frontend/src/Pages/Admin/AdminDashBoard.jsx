@@ -28,7 +28,7 @@ const AdminDashBoard = () => {
           backgroundColor: "#f5f7fa",
           minHeight: "100vh",
           maxWidth: "100%",
-        }} className="w-full"
+        }} className="w-full widthalign"
       >
         <div style={{ padding: "20px" }}>
           {selectedItem === "Add Client" ? (
@@ -56,14 +56,16 @@ const AdminDashBoard = () => {
                 Welcome!
               </h1>
               <CountUsers />
-              <div style={{ display: "flex", gap: "20px", flexWrap: "wrap",  }}>
+              {/* <div style={{ display: "flex", gap: "20px", flexWrap: "wrap",  }}> */}
+               
+               
+              {/* </div> */}
+              <div style={{ flex: "1", minWidth: "35%" }}>
+                  <UpcommingProject />
+                </div>
                 <div style={{ flex: "1.5", minWidth: "60%" }}>
                   <ProjectList />
                 </div>
-                <div style={{ flex: "1", minWidth: "35%" }}>
-                  <UpcommingProject />
-                </div>
-              </div>
             </>
           )}
         </div>

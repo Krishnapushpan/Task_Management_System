@@ -1,57 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { FaSyncAlt, FaWindowMinimize, FaTimes } from "react-icons/fa";
+
+const statusOptions = [
+  "Planning",
+  "In Progress",
+  "Completed",
+  "Pending",
+  "Started"
+];
 
 const ProjectList = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [isMinimized, setIsMinimized] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [assignments, setAssignments] = useState([]);
+  const [editingStatusId, setEditingStatusId] = useState(null);
+  const [statusUpdate, setStatusUpdate] = useState("");
+  const [user, setUser] = useState(null);
 
-  // Sample data - replace with actual data from your API or state
-  const projects = [
-    {
-      id: 1,
-      name: "Velonic Admin v1",
-      startDate: "01/01/2015",
-      dueDate: "26/04/2015",
-      status: "Released",
-      assignee: "Techzaa Studio",
-    },
-    {
-      id: 2,
-      name: "Velonic Frontend v1",
-      startDate: "01/01/2015",
-      dueDate: "26/04/2015",
-      status: "Released",
-      assignee: "Techzaa Studio",
-    },
-    {
-      id: 3,
-      name: "Velonic Admin v1.1",
-      startDate: "01/05/2015",
-      dueDate: "10/05/2015",
-      status: "Pending",
-      assignee: "Techzaa Studio",
-    },
-    {
-      id: 4,
-      name: "Velonic Frontend v1.1",
-      startDate: "01/01/2015",
-      dueDate: "31/05/2015",
-      status: "Work in Progress",
-      assignee: "Techzaa Studio",
-    },
-  ];
+  useEffect(() => {
+    const fetchAssignments = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axios.get("/api/teams/all", { withCredentials: true });
+        setAssignments(response.data);
+      } catch (err) {
+        setAssignments([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchAssignments();
+    // Get user from localStorage
+    const userData = JSON.parse(localStorage.getItem("user"));
+    setUser(userData);
+  }, []);
 
-  // Function to determine which CSS class to use for status badges
-  const getStatusClass = (status) => {
-    switch (status.toLowerCase()) {
-      case "released":
-        return "status-released";
-      case "pending":
-        return "status-pending";
-      case "work in progress":
-        return "status-progress";
-    }
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return `${date.getDate().toString().padStart(2, "0")}/${(
+      date.getMonth() + 1
+    ).toString().padStart(2, "0")}/${date.getFullYear()}`;
   };
 
   // Function to refresh the project list
@@ -77,9 +68,32 @@ const ProjectList = () => {
     console.log("Project list closed");
   };
 
+  const handleEditClick = (assignment) => {
+    setEditingStatusId(assignment._id);
+    setStatusUpdate(assignment.status || assignment.project?.status || "");
+  };
+
+  const handleStatusChange = async (assignmentId, newStatus) => {
+    try {
+      await axios.patch(`/api/teams/${assignmentId}/status`, { status: newStatus }, { withCredentials: true });
+      setAssignments((prev) =>
+        prev.map((a) =>
+          a._id === assignmentId
+            ? { ...a, status: newStatus, project: { ...a.project, status: newStatus } }
+            : a
+        )
+      );
+      setEditingStatusId(null);
+    } catch (err) {
+      alert("Failed to update status");
+    }
+  };
+
   if (!isVisible) {
     return null;
   }
+
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <div className="project-list-container">
@@ -120,29 +134,68 @@ const ProjectList = () => {
             <tr>
               <th>#</th>
               <th>Project Name</th>
+              <th>Description</th>
               <th>Start Date</th>
               <th>Due Date</th>
               <th>Status</th>
-              <th>Assign</th>
+              <th>Team Lead</th>
+              <th>Team Members</th>
+              <th>Students</th>
             </tr>
           </thead>
           <tbody>
-            {projects.map((project) => (
-              <tr key={project.id}>
-                <td>{project.id}</td>
-                <td>{project.name}</td>
-                <td>{project.startDate}</td>
-                <td>{project.dueDate}</td>
-                <td>
-                  <span
-                    className={`status-badge ${getStatusClass(project.status)}`}
-                  >
-                    {project.status}
-                  </span>
-                </td>
-                <td>{project.assignee}</td>
-              </tr>
-            ))}
+            {assignments.map((a, idx) => {
+              const isTeamLead = user && a.teamLead && (user._id === a.teamLead._id || user.email === a.teamLead.email);
+              return (
+                <tr key={a._id}>
+                  <td>{idx + 1}</td>
+                  <td>{a.projectName || a.project?.projectName}</td>
+                  <td>{a.description || a.project?.description}</td>
+                  <td>{formatDate(a.startDate || a.project?.startDate)}</td>
+                  <td>{formatDate(a.dueDate || a.project?.endDate)}</td>
+                  <td>
+                    {editingStatusId === a._id ? (
+                      <select
+                        className="status-dropdown"
+                        value={statusUpdate}
+                        onChange={(e) => {
+                          setStatusUpdate(e.target.value);
+                          handleStatusChange(a._id, e.target.value);
+                        }}
+                        autoFocus
+                      >
+                        {statusOptions.map((opt) => (
+                          <option key={opt} value={opt}>{opt}</option>
+                        ))}
+                      </select>
+                    ) : (
+                      <>
+                        {a.status || a.project?.status || "N/A"}
+                        {isTeamLead && (
+                          <button
+                            className="status-edit-btn"
+                            onClick={() => handleEditClick(a)}
+                          >
+                            Edit
+                          </button>
+                        )}
+                      </>
+                    )}
+                  </td>
+                  <td>{a.teamLead?.fullName || "N/A"}</td>
+                  <td>
+                    {a.teamMembers && a.teamMembers.length > 0
+                      ? a.teamMembers.map((m) => m.fullName).join(", ")
+                      : "N/A"}
+                  </td>
+                  <td>
+                    {a.students && a.students.length > 0
+                      ? a.students.map((s) => s.fullName).join(", ")
+                      : "N/A"}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       )}

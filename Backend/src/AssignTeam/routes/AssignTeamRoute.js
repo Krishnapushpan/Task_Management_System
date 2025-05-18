@@ -3,6 +3,7 @@ import {
   assignTeam,
   getTeamByProject,
   getAllTeamAssignments,
+  updateAssignmentStatus,
 } from "../controllers/AssignTeamController.js";
 import { verifyToken } from "../../Middleware/auth.js";
 
@@ -16,5 +17,7 @@ router.get("/project/:projectId", verifyToken, getTeamByProject);
 
 // Get all team assignments (requires authentication)
 router.get("/all", verifyToken, getAllTeamAssignments);
+
+router.patch('/:id/status', updateAssignmentStatus);
 
 export default router;

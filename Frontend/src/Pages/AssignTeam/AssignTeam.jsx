@@ -181,6 +181,10 @@ const AssignTeam = () => {
         teamLeadId: selectedTeamLead,
         teamMemberIds: selectedTeamMembers,
         studentIds: selectedStudents,
+        projectName: project?.projectName,
+        description: project?.description,
+        startDate: project?.startDate,
+        dueDate: project?.endDate,
       };
 
       console.log("Sending assignment data:", assignmentData);
@@ -381,11 +385,8 @@ const AssignTeam = () => {
                         <li
                           key={member.id}
                           className={`team-member-item ${
-                            selectedTeamMembers.includes(member.id)
-                              ? "selected"
-                              : ""
+                            selectedTeamMembers.includes(member.id) ? "selected" : ""
                           }`}
-                          onClick={() => handleTeamMemberSelect(member.id)}
                         >
                           <input
                             type="checkbox"
@@ -430,11 +431,8 @@ const AssignTeam = () => {
                         <li
                           key={student.id}
                           className={`team-member-item ${
-                            selectedStudents.includes(student.id)
-                              ? "selected"
-                              : ""
+                            selectedStudents.includes(student.id) ? "selected" : ""
                           }`}
-                          onClick={() => handleStudentSelect(student.id)}
                         >
                           <input
                             type="checkbox"

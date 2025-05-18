@@ -14,6 +14,7 @@ const ViewMoreProjects = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [userRole, setUserRole] = useState(null);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -31,8 +32,7 @@ const ViewMoreProjects = () => {
             return new Date(b.createdAt) - new Date(a.createdAt);
           });
 
-          // Skip the first project (shown on dashboard) and show the rest
-          setProjects(sortedProjects.length > 1 ? sortedProjects.slice(1) : []);
+          setProjects(sortedProjects);
         } else {
           console.warn("Unexpected API response format:", response.data);
           setProjects([]);
@@ -46,6 +46,9 @@ const ViewMoreProjects = () => {
     };
 
     fetchProjects();
+    // Get user role from localStorage
+    const userData = JSON.parse(localStorage.getItem("user"));
+    setUserRole(userData?.role);
   }, []);
 
   // Format date to display in DD/MM/YYYY format
@@ -125,13 +128,15 @@ const ViewMoreProjects = () => {
                   </div>
                 </div>
                 <div className="upcoming-project-footer">
-                  <Link
-                    to={`/assign-project/${project._id}`}
-                    className="assign-project-button"
-                  >
-                    <FaUsers className="assign-project-button-icon" />
-                    <span>Assign Team</span>
-                  </Link>
+                  {userRole === "admin" && (
+                    <Link
+                      to={`/assign-project/${project._id}`}
+                      className="assign-project-button"
+                    >
+                      <FaUsers className="assign-project-button-icon" />
+                      <span>Assign Team</span>
+                    </Link>
+                  )}
                 </div>
               </div>
             ))}

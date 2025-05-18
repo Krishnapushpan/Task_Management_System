@@ -46,8 +46,8 @@ const ClientList = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this client?')) {
       try {
-        // Add delete API call here when implemented
-        // await axios.delete(`/api/users/${id}`);
+        console.log('Deleting client with ID:', id);
+        await axios.delete(`/api/users/${editClient._id}`, { withCredentials: true });
         setClients(clients.filter(client => client._id !== id));
       } catch (error) {
         setError('Failed to delete client. Please try again.');
@@ -61,8 +61,8 @@ const ClientList = () => {
 
   const handleModalSave = async () => {
     try {
-      // Add update API call here when implemented
-      // await axios.put(`/api/users/${editClient._id}`, editClient);
+      console.log('Updating client with ID:', editClient._id, editClient);
+      await axios.put(`/api/users/${editClient._id}`, editClient, { withCredentials: true });
       setClients(clients.map(c => c._id === editClient._id ? editClient : c));
       setModalOpen(false);
       setEditClient(null);

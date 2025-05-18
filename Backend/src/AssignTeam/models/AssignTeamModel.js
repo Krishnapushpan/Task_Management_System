@@ -6,6 +6,27 @@ const assignTeamSchema = new mongoose.Schema({
     ref: "Project",
     required: true,
   },
+  projectName: {
+    type: String,
+    required: false,
+  },
+  description: {
+    type: String,
+    required: false,
+  },
+  startDate: {
+    type: Date,
+    required: false,
+  },
+  dueDate: {
+    type: Date,
+    required: false,
+  },
+  status: {
+    type: String,
+    enum: ["Planning", "In Progress", "Completed", "Pending", "Started"],
+    default: "Planning",
+  },
   teamLead: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
