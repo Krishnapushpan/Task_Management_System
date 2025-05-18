@@ -1,4 +1,5 @@
 import Project from "../models/ProjectModel.js";
+import mongoose from "mongoose";
 
 // Create a new project
 export const createProject = async (req, res) => {
@@ -11,9 +12,11 @@ export const createProject = async (req, res) => {
       role !== "admin" &&
       role !== "Client" &&
       role !== "Admin"
-    ) { 
+    ) {
       return res.status(403).json({ message: "Access denied" });
     } else {
+      console.log("Creating project with user ID:", req.userId);
+
       // Create new project
       const newProject = new Project({
         projectName,
@@ -21,7 +24,7 @@ export const createProject = async (req, res) => {
         startDate,
         endDate,
         budget,
-        // createdBy: req.userId, // Get userId from auth middleware
+        createdBy: req.userId, // Get userId from auth middleware
       });
 
       // Save project to database
@@ -48,10 +51,10 @@ export const createProject = async (req, res) => {
 // Get all projects
 export const getAllProjects = async (req, res) => {
   try {
-    const projects = await Project.find()
-      .populate("createdBy", "fullName email")
-      .sort({ createdAt: -1 });
+    // Removed authentication requirement for easier demonstration
+    const projects = await Project.find().sort({ createdAt: -1 });
 
+    console.log("Projects fetched:", projects.length);
     res.status(200).json(projects);
   } catch (error) {
     console.error("Get projects error:", error);
@@ -164,5 +167,48 @@ export const assignTeamToProject = async (req, res) => {
     res
       .status(500)
       .json({ message: "Failed to assign team", error: error.message });
+  }
+};
+
+// Get project with team details
+export const getProjectWithTeam = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // First get the project
+    const project = await Project.findById(id);
+
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    // Try to find the team assignment for this project
+    const teamAssignment = await mongoose
+      .model("AssignTeam")
+      .findOne({ project: id })
+      .populate("teamLead", "fullName email role position")
+      .populate("teamMembers", "fullName email role position")
+      .populate("students", "fullName email role");
+
+    // Return project with team details if assignment exists
+    res.status(200).json({
+      project: {
+        _id: project._id,
+        projectName: project.projectName,
+        description: project.description,
+        startDate: project.startDate,
+        endDate: project.endDate,
+        budget: project.budget,
+        status: project.status,
+        createdAt: project.createdAt,
+      },
+      team: teamAssignment || null,
+    });
+  } catch (error) {
+    console.error("Get project with team error:", error);
+    res.status(500).json({
+      message: "Failed to fetch project with team",
+      error: error.message,
+    });
   }
 };

@@ -6,6 +6,7 @@ import {
   updateProject,
   deleteProject,
   assignTeamToProject,
+  getProjectWithTeam,
 } from "../controllers/ProjectController.js";
 import { verifyToken } from "../../Middleware/auth.js";
 
@@ -14,11 +15,14 @@ const router = express.Router();
 // Create a new project (requires authentication)
 router.post("/create", verifyToken, createProject);
 
-// Get all projects (requires authentication)
-router.get("/all", verifyToken, getAllProjects);
+// Get all projects (temporarily removed auth for testing)
+router.get("/all", getAllProjects);
 
 // Get project by ID (requires authentication)
 router.get("/:id", verifyToken, getProjectById);
+
+// Get project with team details (requires authentication)
+router.get("/:id/with-team", verifyToken, getProjectWithTeam);
 
 // Update a project (requires authentication)
 router.put("/:id", verifyToken, updateProject);

@@ -225,6 +225,7 @@ export const getStudents = async (req, res) => {
 
 export const getUserCounts = async (req, res) => {
   try {
+    // For testing, removed any auth requirement
     // Count users by role
     const clientCount = await User.countDocuments({ role: "Client" });
     const teamLeadCount = await User.countDocuments({ role: "Team Lead" });

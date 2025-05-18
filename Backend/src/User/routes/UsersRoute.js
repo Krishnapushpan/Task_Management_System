@@ -33,7 +33,7 @@ router.get("/team-leads", getTeamLeads);
 // Get all students route
 router.get("/students", getStudents);
 
-// Get user counts route
+// Get user counts route (temporarily removed auth for testing)
 router.get("/counts", getUserCounts);
 
 export default router;

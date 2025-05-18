@@ -22,7 +22,7 @@ const projectSchema = new mongoose.Schema({
     required: true,
     min: 0,
   },
- 
+
   createdAt: {
     type: Date,
     default: Date.now,
