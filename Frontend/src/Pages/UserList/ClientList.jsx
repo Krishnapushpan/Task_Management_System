@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import './List.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "./List.css";
 
 const ClientList = () => {
   const [clients, setClients] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editClient, setEditClient] = useState(null);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     // Check if user is admin
-    const userData = JSON.parse(localStorage.getItem('user'));
-    setIsAdmin(userData?.role === 'admin');
+    const userData = JSON.parse(localStorage.getItem("user"));
+    setIsAdmin(userData?.role === "admin");
   }, []);
 
   // Fetch clients when component mounts
@@ -24,33 +24,34 @@ const ClientList = () => {
   const fetchClients = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/users/clients', {
-        withCredentials: true
+      const response = await axios.get("/api/users/clients", {
+        withCredentials: true,
       });
       setClients(response.data.clients);
-      setError('');
+      setError("");
     } catch (error) {
-      setError('Failed to fetch clients. Please try again later.');
-      console.error('Error fetching clients:', error);
+      setError("Failed to fetch clients. Please try again later.");
+      console.error("Error fetching clients:", error);
     } finally {
       setLoading(false);
     }
   };
 
   const handleEdit = (id) => {
-    const client = clients.find(c => c._id === id);
+    const client = clients.find((c) => c._id === id);
     setEditClient({ ...client });
     setModalOpen(true);
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this client?')) {
+    if (window.confirm("Are you sure you want to delete this client?")) {
       try {
-        console.log('Deleting client with ID:', id);
-        await axios.delete(`/api/users/${editClient._id}`, { withCredentials: true });
-        setClients(clients.filter(client => client._id !== id));
+        await axios.delete(`/api/users/${id}`, { withCredentials: true });
+        setClients(clients.filter((client) => client._id !== id));
+        setError(""); // Clear any existing errors
       } catch (error) {
-        setError('Failed to delete client. Please try again.');
+        console.error("Delete error:", error);
+        setError("Failed to delete client. Please try again.");
       }
     }
   };
@@ -61,13 +62,17 @@ const ClientList = () => {
 
   const handleModalSave = async () => {
     try {
-      console.log('Updating client with ID:', editClient._id, editClient);
-      await axios.put(`/api/users/${editClient._id}`, editClient, { withCredentials: true });
-      setClients(clients.map(c => c._id === editClient._id ? editClient : c));
+      console.log("Updating client with ID:", editClient._id, editClient);
+      await axios.put(`/api/users/${editClient._id}`, editClient, {
+        withCredentials: true,
+      });
+      setClients(
+        clients.map((c) => (c._id === editClient._id ? editClient : c))
+      );
       setModalOpen(false);
       setEditClient(null);
     } catch (error) {
-      setError('Failed to update client. Please try again.');
+      setError("Failed to update client. Please try again.");
     }
   };
 
@@ -106,11 +111,21 @@ const ClientList = () => {
                   <td>{client.fullName}</td>
                   <td>{client.email}</td>
                   <td>{client.phone}</td>
-                  <td>{client.position || 'N/A'}</td>
+                  <td>{client.position || "N/A"}</td>
                   {isAdmin && (
                     <td>
-                      <button className="client-edit-btn" onClick={() => handleEdit(client._id)}>Edit</button>
-                      <button className="client-delete-btn" onClick={() => handleDelete(client._id)}>Delete</button>
+                      <button
+                        className="client-edit-btn"
+                        onClick={() => handleEdit(client._id)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="client-delete-btn"
+                        onClick={() => handleDelete(client._id)}
+                      >
+                        Delete
+                      </button>
                     </td>
                   )}
                 </tr>
@@ -124,7 +139,8 @@ const ClientList = () => {
         <div className="modal-overlay">
           <div className="modal-content">
             <h3>Edit Client</h3>
-            <label className="modal-label">Full Name:
+            <label className="modal-label">
+              Full Name:
               <input
                 type="text"
                 name="fullName"
@@ -133,7 +149,8 @@ const ClientList = () => {
                 className="modal-input"
               />
             </label>
-            <label className="modal-label">Email:
+            <label className="modal-label">
+              Email:
               <input
                 type="email"
                 name="email"
@@ -142,7 +159,8 @@ const ClientList = () => {
                 className="modal-input"
               />
             </label>
-            <label className="modal-label">Phone Number:
+            <label className="modal-label">
+              Phone Number:
               <input
                 type="text"
                 name="phone"
@@ -151,18 +169,23 @@ const ClientList = () => {
                 className="modal-input"
               />
             </label>
-            <label className="modal-label">Position:
+            <label className="modal-label">
+              Position:
               <input
                 type="text"
                 name="position"
-                value={editClient.position || ''}
+                value={editClient.position || ""}
                 onChange={handleModalChange}
                 className="modal-input"
               />
             </label>
             <div className="modal-actions">
-              <button className="client-edit-btn" onClick={handleModalSave}>Save</button>
-              <button className="client-delete-btn" onClick={handleModalCancel}>Cancel</button>
+              <button className="client-edit-btn" onClick={handleModalSave}>
+                Save
+              </button>
+              <button className="client-delete-btn" onClick={handleModalCancel}>
+                Cancel
+              </button>
             </div>
           </div>
         </div>

@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import './List.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "./List.css";
 
 const StudentList = () => {
   const [students, setStudents] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editStudent, setEditStudent] = useState(null);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     // Check if user is admin
-    const userData = JSON.parse(localStorage.getItem('user'));
-    setIsAdmin(userData?.role === 'admin');
+    const userData = JSON.parse(localStorage.getItem("user"));
+    setIsAdmin(userData?.role === "admin");
   }, []);
 
   // Fetch students when component mounts
@@ -24,33 +24,34 @@ const StudentList = () => {
   const fetchStudents = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/users/students', {
-        withCredentials: true
+      const response = await axios.get("/api/users/students", {
+        withCredentials: true,
       });
       setStudents(response.data.students);
-      setError('');
+      setError("");
     } catch (error) {
-      setError('Failed to fetch students. Please try again later.');
-      console.error('Error fetching students:', error);
+      setError("Failed to fetch students. Please try again later.");
+      console.error("Error fetching students:", error);
     } finally {
       setLoading(false);
     }
   };
 
   const handleEdit = (id) => {
-    const student = students.find(s => s._id === id);
+    const student = students.find((s) => s._id === id);
     setEditStudent({ ...student });
     setModalOpen(true);
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this student?')) {
+    if (window.confirm("Are you sure you want to delete this student?")) {
       try {
-        // Add delete API call here when implemented
-        // await axios.delete(`/api/users/${id}`);
-        setStudents(students.filter(student => student._id !== id));
+        await axios.delete(`/api/users/${id}`, { withCredentials: true });
+        setStudents(students.filter((student) => student._id !== id));
+        setError(""); // Clear any existing errors
       } catch (error) {
-        setError('Failed to delete student. Please try again.');
+        console.error("Delete error:", error);
+        setError("Failed to delete student. Please try again.");
       }
     }
   };
@@ -63,11 +64,13 @@ const StudentList = () => {
     try {
       // Add update API call here when implemented
       // await axios.put(`/api/users/${editStudent._id}`, editStudent);
-      setStudents(students.map(s => s._id === editStudent._id ? editStudent : s));
+      setStudents(
+        students.map((s) => (s._id === editStudent._id ? editStudent : s))
+      );
       setModalOpen(false);
       setEditStudent(null);
     } catch (error) {
-      setError('Failed to update student. Please try again.');
+      setError("Failed to update student. Please try again.");
     }
   };
 
@@ -109,8 +112,18 @@ const StudentList = () => {
                   <td>{student.role}</td>
                   {isAdmin && (
                     <td>
-                      <button className="client-edit-btn" onClick={() => handleEdit(student._id)}>Edit</button>
-                      <button className="client-delete-btn" onClick={() => handleDelete(student._id)}>Delete</button>
+                      <button
+                        className="client-edit-btn"
+                        onClick={() => handleEdit(student._id)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="client-delete-btn"
+                        onClick={() => handleDelete(student._id)}
+                      >
+                        Delete
+                      </button>
                     </td>
                   )}
                 </tr>
@@ -124,7 +137,8 @@ const StudentList = () => {
         <div className="modal-overlay">
           <div className="modal-content">
             <h3>Edit Student</h3>
-            <label className="modal-label">Full Name:
+            <label className="modal-label">
+              Full Name:
               <input
                 type="text"
                 name="fullName"
@@ -133,7 +147,8 @@ const StudentList = () => {
                 className="modal-input"
               />
             </label>
-            <label className="modal-label">Email:
+            <label className="modal-label">
+              Email:
               <input
                 type="email"
                 name="email"
@@ -142,7 +157,8 @@ const StudentList = () => {
                 className="modal-input"
               />
             </label>
-            <label className="modal-label">Phone Number:
+            <label className="modal-label">
+              Phone Number:
               <input
                 type="text"
                 name="phone"
@@ -151,7 +167,8 @@ const StudentList = () => {
                 className="modal-input"
               />
             </label>
-            <label className="modal-label">Role:
+            <label className="modal-label">
+              Role:
               <input
                 type="text"
                 name="role"
@@ -161,8 +178,12 @@ const StudentList = () => {
               />
             </label>
             <div className="modal-actions">
-              <button className="client-edit-btn" onClick={handleModalSave}>Save</button>
-              <button className="client-delete-btn" onClick={handleModalCancel}>Cancel</button>
+              <button className="client-edit-btn" onClick={handleModalSave}>
+                Save
+              </button>
+              <button className="client-delete-btn" onClick={handleModalCancel}>
+                Cancel
+              </button>
             </div>
           </div>
         </div>
@@ -172,4 +193,3 @@ const StudentList = () => {
 };
 
 export default StudentList;
-
