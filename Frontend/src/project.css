@@ -609,3 +609,10 @@
       grid-template-columns: 1fr;
     }
   }
+
+.assign-project-button[disabled] {
+  background: #b0bec5 !important; /* A grayish color */
+  color: #fff !important;
+  cursor: not-allowed;
+  opacity: 1;
+}

@@ -12,6 +12,7 @@ import axios from "axios";
 
 const ViewMoreProjects = () => {
   const [projects, setProjects] = useState([]);
+  const [assignedProjectIds, setAssignedProjectIds] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [userRole, setUserRole] = useState(null);
@@ -45,7 +46,19 @@ const ViewMoreProjects = () => {
       }
     };
 
+    const fetchAssignedProjects = async () => {
+      try {
+        const response = await axios.get("/api/teams/all", { withCredentials: true });
+        // Extract project IDs from assignments
+        const ids = response.data.map(a => a.project?._id || a.project);
+        setAssignedProjectIds(ids);
+      } catch (err) {
+        setAssignedProjectIds([]);
+      }
+    };
+
     fetchProjects();
+    fetchAssignedProjects();
     // Get user role from localStorage
     const userData = JSON.parse(localStorage.getItem("user"));
     setUserRole(userData?.role);
@@ -129,13 +142,20 @@ const ViewMoreProjects = () => {
                 </div>
                 <div className="upcoming-project-footer">
                   {userRole === "admin" && (
-                    <Link
-                      to={`/assign-project/${project._id}`}
-                      className="assign-project-button"
-                    >
-                      <FaUsers className="assign-project-button-icon" />
-                      <span>Assign Team</span>
-                    </Link>
+                    assignedProjectIds.includes(project._id) ? (
+                      <button className="assign-project-button" disabled>
+                        <FaUsers className="assign-project-button-icon" />
+                        <span>Assigned</span>
+                      </button>
+                    ) : (
+                      <Link
+                        to={`/assign-project/${project._id}`}
+                        className="assign-project-button"
+                      >
+                        <FaUsers className="assign-project-button-icon" />
+                        <span>Assign Team</span>
+                      </Link>
+                    )
                   )}
                 </div>
               </div>
