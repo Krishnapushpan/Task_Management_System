@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaSyncAlt, FaWindowMinimize, FaTimes } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const statusOptions = [
   "Planning",
@@ -18,6 +19,7 @@ const ProjectList = () => {
   const [editingStatusId, setEditingStatusId] = useState(null);
   const [statusUpdate, setStatusUpdate] = useState("");
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAssignments = async () => {
@@ -172,12 +174,21 @@ const ProjectList = () => {
                       <>
                         {a.status || a.project?.status || "N/A"}
                         {isTeamLead && (
-                          <button
-                            className="status-edit-btn"
-                            onClick={() => handleEditClick(a)}
-                          >
-                            Edit
-                          </button>
+                          <>
+                            <button
+                              className="status-edit-btn"
+                              onClick={() => handleEditClick(a)}
+                            >
+                              Edit
+                            </button>
+                            <button
+                              className="assign-work-btn"
+                              style={{ marginLeft: "8px" }}
+                              onClick={() => navigate("/assign-work")}
+                            >
+                              Assign Work
+                            </button>
+                          </>
                         )}
                       </>
                     )}

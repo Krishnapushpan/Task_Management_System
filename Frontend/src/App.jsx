@@ -9,6 +9,7 @@ import ViewMoreProjects from "./Pages/ViewMoreProjects/ViewMoreProjects";
 import AssignTeam from "./Pages/AssignTeam/AssignTeam";
 import Login from "./Pages/Signup_Login/Login";
 import Signup from "./Pages/Signup_Login/Signup";
+import AssignWork from "./Pages/AssignWork/AssignWork";
 // import UserList from "./Pages/UserList";
 function App() {
   return (
@@ -49,6 +50,7 @@ function App() {
 
         <Route path="/view-more-projects" element={<ViewMoreProjects />} />
         <Route path="/assign-project/:projectId" element={<AssignTeam />} />
+        <Route path="/assign-work" element={<AssignWork />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
       </Routes>
