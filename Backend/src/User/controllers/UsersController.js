@@ -15,11 +15,11 @@ export const registerUser = async (req, res) => {
     }
 
     // Check if this is the first user (will be admin)
-    const found = await User.findOne({ role: "admin" });
+    // const found = await User.findOne({ role: "admin" });
     let role = "Client";
-    if (!found) {
-      role = "admin";
-    }
+    // if (!found) {
+    //   role = "admin";
+    // }
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
