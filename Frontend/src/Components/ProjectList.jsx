@@ -25,7 +25,16 @@ const ProjectList = () => {
     const fetchAssignments = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get("/api/teams/all", { withCredentials: true });
+        const userData = JSON.parse(localStorage.getItem("user"));
+        let response;
+        if (userData?.role === "admin") {
+          // Admin: fetch all assignments
+          response = await axios.get("/api/teams/all", { withCredentials: true });
+        } else {
+          // Others: fetch only relevant assignments
+          const userId = userData?.userid;
+          response = await axios.get(`/api/teams/user-assignments?userId=${userId}`, { withCredentials: true });
+        }
         setAssignments(response.data);
       } catch (err) {
         setAssignments([]);
@@ -36,6 +45,8 @@ const ProjectList = () => {
     fetchAssignments();
     // Get user from localStorage
     const userData = JSON.parse(localStorage.getItem("user"));
+    console.log("Logged in user ID:", userData?.userid);
+    console.log("Full user data:", userData);
     setUser(userData);
   }, []);
 

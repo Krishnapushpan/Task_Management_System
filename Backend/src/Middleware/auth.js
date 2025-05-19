@@ -15,6 +15,7 @@ function verifyToken(req, res, next) {
     req.role = decoded.role;
     req.email = decoded.email;
     req.fullName = decoded.fullName;
+    req.userid = decoded.userid;
     next();
   } catch (error) {
     console.error("Token verification error:", error);
