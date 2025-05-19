@@ -967,3 +967,21 @@ html, body {
   background: #e3f2fd;
 }
 
+.assign-work-btn {
+  background: #e3f2fd;
+  color: #1976d2;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 14px;
+  font-size: 0.98rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-left: 8px;
+  transition: background 0.2s, color 0.2s;
+  outline: none;
+}
+.assign-work-btn:hover {
+  background: #1976d2;
+  color: #fff;
+}
+
