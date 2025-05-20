@@ -8,7 +8,7 @@ const statusOptions = [
   "In Progress",
   "Completed",
   "Pending",
-  "Started"
+  "Started",
 ];
 
 const ProjectList = () => {
@@ -25,7 +25,9 @@ const ProjectList = () => {
     const fetchAssignments = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get("/api/teams/all", { withCredentials: true });
+        const response = await axios.get("/api/teams/all", {
+          withCredentials: true,
+        });
         setAssignments(response.data);
       } catch (err) {
         setAssignments([]);
@@ -44,7 +46,9 @@ const ProjectList = () => {
     const date = new Date(dateString);
     return `${date.getDate().toString().padStart(2, "0")}/${(
       date.getMonth() + 1
-    ).toString().padStart(2, "0")}/${date.getFullYear()}`;
+    )
+      .toString()
+      .padStart(2, "0")}/${date.getFullYear()}`;
   };
 
   // Function to refresh the project list
@@ -77,11 +81,19 @@ const ProjectList = () => {
 
   const handleStatusChange = async (assignmentId, newStatus) => {
     try {
-      await axios.patch(`/api/teams/${assignmentId}/status`, { status: newStatus }, { withCredentials: true });
+      await axios.patch(
+        `/api/teams/${assignmentId}/status`,
+        { status: newStatus },
+        { withCredentials: true }
+      );
       setAssignments((prev) =>
         prev.map((a) =>
           a._id === assignmentId
-            ? { ...a, status: newStatus, project: { ...a.project, status: newStatus } }
+            ? {
+                ...a,
+                status: newStatus,
+                project: { ...a.project, status: newStatus },
+              }
             : a
         )
       );
@@ -147,7 +159,11 @@ const ProjectList = () => {
           </thead>
           <tbody>
             {assignments.map((a, idx) => {
-              const isTeamLead = user && a.teamLead && (user._id === a.teamLead._id || user.email === a.teamLead.email);
+              const isTeamLead =
+                user &&
+                a.teamLead &&
+                (user._id === a.teamLead._id ||
+                  user.email === a.teamLead.email);
               return (
                 <tr key={a._id}>
                   <td>{idx + 1}</td>
@@ -167,7 +183,9 @@ const ProjectList = () => {
                         autoFocus
                       >
                         {statusOptions.map((opt) => (
-                          <option key={opt} value={opt}>{opt}</option>
+                          <option key={opt} value={opt}>
+                            {opt}
+                          </option>
                         ))}
                       </select>
                     ) : (
@@ -184,7 +202,21 @@ const ProjectList = () => {
                             <button
                               className="assign-work-btn"
                               style={{ marginLeft: "8px" }}
-                              onClick={() => navigate("/assign-work")}
+                              onClick={() =>
+                                navigate(`/assign-work/${a._id}`, {
+                                  state: {
+                                    projectName:
+                                      a.projectName || a.project?.projectName,
+                                    description:
+                                      a.description || a.project?.description,
+                                    startDate:
+                                      a.startDate || a.project?.startDate,
+                                    endDate: a.dueDate || a.project?.endDate,
+                                    projectId: a._id,
+                                    project: a.project,
+                                  },
+                                })
+                              }
                             >
                               Assign Work
                             </button>
