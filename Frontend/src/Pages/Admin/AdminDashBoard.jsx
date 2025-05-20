@@ -12,6 +12,7 @@ import Teamlead from "../UserList/Teamlead";
 import PersonalWork from "../PersonalWork/PersonalWork";
 import MenuIcon from "../../assets/menu-icon";
 import WorkCount from "../../Components/WorkCount";
+import WorkStatus from "../WorkStatus/WorkStatus";
 
 const AdminDashBoard = () => {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -75,6 +76,11 @@ const AdminDashBoard = () => {
     userRole === "team_lead" ||
     userRole === "teamLead";
 
+  const isTeamLead =
+    userRole === "Team Lead" ||
+    userRole === "team_lead" ||
+    userRole === "teamLead";
+
   console.log("Current userRole:", userRole); // Debug log
   console.log("isTeamMemberOrStudent:", isTeamMemberOrStudent); // Debug log
 
@@ -131,6 +137,11 @@ const AdminDashBoard = () => {
             <div style={{ marginTop: "20px" }}>
               <ProjectList />
             </div>
+            {isTeamLead && (
+              <div style={{ marginTop: "20px" }}>
+                <WorkStatus />
+              </div>
+            )}
             {isTeamMemberOrStudent && (
               <div style={{ marginTop: "20px" }}>
                 <PersonalWork />

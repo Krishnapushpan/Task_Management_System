@@ -287,6 +287,10 @@ const AssignWork = () => {
     setSuccessMessage("");
     setIsSaving(true);
 
+    // Get team lead id from localStorage
+    const userData = JSON.parse(localStorage.getItem("user"));
+    const teamLeadId = userData?.userid;
+
     try {
       // Validate assignments
       const validAssignments = assignments.filter(
@@ -324,6 +328,7 @@ const AssignWork = () => {
           teamMemberIds,
           studentIds,
           status: "Pending",
+          teamLeadId,
         };
 
         // Add optional fields if they exist
