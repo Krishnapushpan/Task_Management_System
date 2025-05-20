@@ -50,7 +50,7 @@ function App() {
 
         <Route path="/view-more-projects" element={<ViewMoreProjects />} />
         <Route path="/assign-project/:projectId" element={<AssignTeam />} />
-        <Route path="/assign-work" element={<AssignWork />} />
+        <Route path="/assign-work/:projectId" element={<AssignWork />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
       </Routes>
