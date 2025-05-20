@@ -6,7 +6,7 @@ import {
   updateWorkAssignmentStatus,
   deleteWorkAssignment,
   // getPersonalWork,
-  getUserWorkAssignments
+  getUserWorkAssignments,
 } from "../controllers/AssignWorkController.js";
 import { verifyToken } from "../../Middleware/auth.js";
 
@@ -15,11 +15,19 @@ const router = express.Router();
 // Create new work assignment
 router.post("/create", verifyToken, createWorkAssignment);
 
+// Alternative endpoint for creating assignments (used in frontend)
+router.post("/assignments/create", verifyToken, createWorkAssignment);
+
 // Get all work assignments
-// router.get("/all", verifyToken, getAllWorkAssignments);
+router.get("/all", verifyToken, getAllWorkAssignments);
 
 // Get work assignments by project ID
-// router.get("/project/:projectId", verifyToken, getWorkAssignmentsByProject);
+router.get("/project/:projectId", verifyToken, getWorkAssignmentsByProject);
+router.get(
+  "/assignments/project/:projectId",
+  verifyToken,
+  getWorkAssignmentsByProject
+);
 
 // Update work assignment status
 router.put("/:id/status", verifyToken, updateWorkAssignmentStatus);
