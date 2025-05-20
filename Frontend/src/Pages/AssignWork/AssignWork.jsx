@@ -335,7 +335,7 @@ const AssignWork = () => {
           assignmentData.priority = assignment.priority;
         }
 
-        return axios.post("/api/assignments/create", assignmentData, {
+        return axios.post("/api/works/create", assignmentData, {
           withCredentials: true,
         });
       });

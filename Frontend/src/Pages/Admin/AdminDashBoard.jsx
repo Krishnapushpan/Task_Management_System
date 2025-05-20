@@ -9,15 +9,24 @@ import ClientList from "../UserList/ClientList";
 import StudentList from "../UserList/StudentList";
 import TeamMember from "../UserList/TeamMember";
 import Teamlead from "../UserList/Teamlead";
-
 import PersonalWork from "../PersonalWork/PersonalWork";
-
 import MenuIcon from "../../assets/menu-icon";
 
 const AdminDashBoard = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1000);
+  const [userRole, setUserRole] = useState(null);
+
+  // Get user role from localStorage on component mount
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user"));
+    console.log("User data from localStorage:", userData); // Debug log
+    if (userData && userData.role) {
+      setUserRole(userData.role);
+      console.log("Set user role to:", userData.role); // Debug log
+    }
+  }, []);
 
   // Handle window resize to detect mobile view
   useEffect(() => {
@@ -46,6 +55,18 @@ const AdminDashBoard = () => {
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
+
+  // Check if user is team member or student with more flexible role checking
+  const isTeamMemberOrStudent = 
+    userRole === "Team Member" || 
+    userRole === "Student" ||
+    userRole === "team_member" || 
+    userRole === "student" ||
+    userRole === "TeamMember" ||
+    userRole === "teamMember";
+
+  console.log("Current userRole:", userRole); // Debug log
+  console.log("isTeamMemberOrStudent:", isTeamMemberOrStudent); // Debug log
 
   return (
     <div className="admin-dashboard-main">
@@ -99,9 +120,11 @@ const AdminDashBoard = () => {
             <div style={{ marginTop: "20px" }}>
               <ProjectList />
             </div>
-            <div style={{ marginTop: "20px" }}>
-              <PersonalWork />
-            </div>
+            {isTeamMemberOrStudent && (
+              <div style={{ marginTop: "20px" }}>
+                <PersonalWork />
+              </div>
+            )}
           </>
         )}
       </div>
