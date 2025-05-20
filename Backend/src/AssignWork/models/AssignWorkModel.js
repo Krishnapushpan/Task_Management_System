@@ -48,6 +48,11 @@ const assignWorkSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  teamLead: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: false,
+  },
 });
 
 const AssignWork = mongoose.model("AssignWork", assignWorkSchema);

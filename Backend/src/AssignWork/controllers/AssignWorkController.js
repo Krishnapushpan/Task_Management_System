@@ -12,6 +12,7 @@ export const createWorkAssignment = async (req, res) => {
       dueDate,
       priority,
       status,
+      teamLeadId,
     } = req.body;
 
     // Create assignment object with required fields
@@ -34,6 +35,10 @@ export const createWorkAssignment = async (req, res) => {
 
     if (status) {
       assignmentData.status = status;
+    }
+
+    if (teamLeadId) {
+      assignmentData.teamLead = teamLeadId;
     }
 
     const newAssignment = new AssignWork(assignmentData);
@@ -198,6 +203,29 @@ export const getUserWorkAssignments = async (req, res) => {
     console.error("Get user work assignments error:", error);
     res.status(500).json({
       message: "Failed to get user work assignments",
+      error: error.message,
+    });
+  }
+};
+
+// Get work assignments by team lead
+export const getWorkAssignmentsByTeamLead = async (req, res) => {
+  try {
+    const { teamLead } = req.query;
+    let filter = {};
+    if (teamLead) {
+      filter.teamLead = teamLead;
+    }
+    const assignments = await AssignWork.find(filter)
+      .populate("teamMembers", "fullName email role position")
+      .populate("students", "fullName email role")
+      .populate("teamLead", "fullName email role position")
+      .sort({ createdAt: -1 });
+    res.status(200).json(assignments);
+  } catch (error) {
+    console.error("Get work assignments by team lead error:", error);
+    res.status(500).json({
+      message: "Failed to fetch work assignments by team lead",
       error: error.message,
     });
   }

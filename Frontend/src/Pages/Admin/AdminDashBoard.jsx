@@ -9,15 +9,26 @@ import ClientList from "../UserList/ClientList";
 import StudentList from "../UserList/StudentList";
 import TeamMember from "../UserList/TeamMember";
 import Teamlead from "../UserList/Teamlead";
-
 import PersonalWork from "../PersonalWork/PersonalWork";
-
 import MenuIcon from "../../assets/menu-icon";
+import WorkCount from "../../Components/WorkCount";
+import WorkStatus from "../WorkStatus/WorkStatus";
 
 const AdminDashBoard = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1000);
+  const [userRole, setUserRole] = useState(null);
+
+  // Get user role from localStorage on component mount
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user"));
+    console.log("User data from localStorage:", userData); // Debug log
+    if (userData && userData.role) {
+      setUserRole(userData.role);
+      console.log("Set user role to:", userData.role); // Debug log
+    }
+  }, []);
 
   // Handle window resize to detect mobile view
   useEffect(() => {
@@ -46,6 +57,32 @@ const AdminDashBoard = () => {
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
+
+  // Check if user is team member or student with more flexible role checking
+  const isTeamMemberOrStudent = 
+    userRole === "Team Member" || 
+    userRole === "Student" ||
+    userRole === "team_member" || 
+    userRole === "student" ||
+    userRole === "TeamMember" ||
+    userRole === "teamMember";
+
+  const isAdminOrClientOrTeamLead =
+    userRole === "Admin" ||
+    userRole === "admin" ||
+    userRole === "Client" ||
+    userRole === "client" ||
+    userRole === "Team Lead" ||
+    userRole === "team_lead" ||
+    userRole === "teamLead";
+
+  const isTeamLead =
+    userRole === "Team Lead" ||
+    userRole === "team_lead" ||
+    userRole === "teamLead";
+
+  console.log("Current userRole:", userRole); // Debug log
+  console.log("isTeamMemberOrStudent:", isTeamMemberOrStudent); // Debug log
 
   return (
     <div className="admin-dashboard-main">
@@ -91,7 +128,8 @@ const AdminDashBoard = () => {
             >
               Welcome!
             </h1>
-            <CountUsers />
+            {isAdminOrClientOrTeamLead && <CountUsers />}
+            {isTeamMemberOrStudent && <WorkCount />}
             <div style={{ marginTop: "20px" }}>
               <UpcommingProject />
             </div>
@@ -99,9 +137,16 @@ const AdminDashBoard = () => {
             <div style={{ marginTop: "20px" }}>
               <ProjectList />
             </div>
-            <div style={{ marginTop: "20px" }}>
-              <PersonalWork />
-            </div>
+            {isTeamLead && (
+              <div style={{ marginTop: "20px" }}>
+                <WorkStatus />
+              </div>
+            )}
+            {isTeamMemberOrStudent && (
+              <div style={{ marginTop: "20px" }}>
+                <PersonalWork />
+              </div>
+            )}
           </>
         )}
       </div>

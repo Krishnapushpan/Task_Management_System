@@ -7,6 +7,7 @@ import {
   deleteWorkAssignment,
   // getPersonalWork,
   getUserWorkAssignments,
+  getWorkAssignmentsByTeamLead
 } from "../controllers/AssignWorkController.js";
 import { verifyToken } from "../../Middleware/auth.js";
 
@@ -37,5 +38,8 @@ router.delete("/:id", verifyToken, deleteWorkAssignment);
 
 // Get personal work assignments for a user (userId as path param)
 router.get("/personal", getUserWorkAssignments);
+
+// Get work assignments by team lead (or all if no filter)
+router.get("/", getWorkAssignmentsByTeamLead);
 
 export default router;
