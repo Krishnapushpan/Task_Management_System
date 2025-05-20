@@ -117,7 +117,7 @@ export const getTeamByProject = async (req, res) => {
   }
 };
 
-// Get all team assignments
+// Get all team assignments (for admin)
 export const getAllTeamAssignments = async (req, res) => {
   try {
     const teamAssignments = await AssignTeam.find()
@@ -150,5 +150,38 @@ export const updateAssignmentStatus = async (req, res) => {
     res.status(200).json({ message: "Status updated", assignment });
   } catch (error) {
     res.status(500).json({ message: "Failed to update status", error: error.message });
+  }
+};
+
+// Get assignments relevant to a specific user
+export const getUserAssignments = async (req, res) => {
+  try {
+    const { userId } = req.query;
+
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+
+    // Find assignments where the user is a team lead, team member, or student
+    const assignments = await AssignTeam.find({
+      $or: [
+        { teamLead: userId },
+        { teamMembers: userId },
+        { students: userId }
+      ]
+    })
+      .populate("project", "projectName description startDate endDate budget")
+      .populate("teamLead", "fullName email role position")
+      .populate("teamMembers", "fullName email role position")
+      .populate("students", "fullName email role")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json(assignments);
+  } catch (error) {
+    console.error("Get user assignments error:", error);
+    res.status(500).json({
+      message: "Failed to get user assignments",
+      error: error.message,
+    });
   }
 };

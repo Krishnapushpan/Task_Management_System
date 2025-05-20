@@ -22,7 +22,11 @@ app.use("/api", apiRoutes);
 
 mongoose
   .connect("mongodb://localhost:27017/Task_management")
-  .then(() => console.log("MongoDB Connected"))
+  .then(async () => {
+    console.log("MongoDB Connected");
+    const { createAdminUser } = await import("./src/server.js");
+    await createAdminUser();
+  })
   .catch((err) => console.error("MongoDB Connection Error:", err));
 
 const port = process.env.PORT;

@@ -18,57 +18,42 @@ const AdminDashBoard = () => {
   };
 
   return (
-    <div style={{ display: "flex" }} className="w-full">
+    <div className="admin-dashboard-main">
       <Sidebar onItemClick={handleItemClick} />
-      <div
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          backgroundColor: "#f5f7fa",
-          minHeight: "100vh",
-          maxWidth: "100%",
-        }} className="w-full widthalign"
-      >
-        <div style={{ padding: "20px" }}>
-          {selectedItem === "Add Client" ? (
-            <CreateUser />
-          ) : selectedItem === "Add Project" ? (
-            <AddProject />
-          ) : selectedItem === "Client List" ? (
-            <ClientList />
-          ) : selectedItem === "Student List" ? (
-            <StudentList />
-          ) : selectedItem === "Team Member List" ? (
-            <TeamMember />
-          ) : selectedItem === "Team Lead List" ? (
-            <Teamlead />
-          ) : (
-            <>
-              <h1
-                style={{
-                  marginBottom: "20px",
-                  fontSize: "24px",
-                  fontWeight: "600",
-                  color: "#323a46",
-                }}
-              >
-                Welcome!
-              </h1>
-              <CountUsers />
-              {/* <div style={{ display: "flex", gap: "20px", flexWrap: "wrap",  }}> */}
-               
-               
-              {/* </div> */}
-              <div style={{ flex: "1", minWidth: "35%" }}>
-                  <UpcommingProject />
-                </div>
-                <div style={{ flex: "1.5", minWidth: "60%" }}>
-                  <ProjectList />
-                </div>
-            </>
-          )}
-        </div>
+      <div className="admin-dashboard-content">
+        {selectedItem === "Add Client" ? (
+          <CreateUser />
+        ) : selectedItem === "Add Project" ? (
+          <AddProject />
+        ) : selectedItem === "Client List" ? (
+          <ClientList />
+        ) : selectedItem === "Student List" ? (
+          <StudentList />
+        ) : selectedItem === "Team Member List" ? (
+          <TeamMember />
+        ) : selectedItem === "Team Lead List" ? (
+          <Teamlead />
+        ) : (
+          <>
+            <h1
+              style={{
+                marginBottom: "20px",
+                fontSize: "24px",
+                fontWeight: "600",
+                color: "#323a46",
+              }}
+            >
+              Welcome!
+            </h1>
+            <CountUsers />
+            <div style={{ marginTop: "20px" }}>
+              <UpcommingProject />
+            </div>
+            <div style={{ marginTop: "20px" }}>
+              <ProjectList />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

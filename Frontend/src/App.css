@@ -342,7 +342,7 @@ body {
 .count-users-container {
   display: flex;
   justify-content: space-between;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: 15px;
   margin: 20px 0;
   width: 100%;
@@ -398,7 +398,6 @@ body {
   .count-users-container {
     flex-wrap: wrap;
   }
-
   .stat-card {
     max-width: 48%;
     margin-bottom: 15px;
@@ -983,5 +982,39 @@ html, body {
 .assign-work-btn:hover {
   background: #1976d2;
   color: #fff;
+}
+
+/* Responsive Admin Dashboard */
+.admin-dashboard-main {
+  /* margin-left: 10px; */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f5f7fa;
+}
+
+.admin-dashboard-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  /* width: 100vw; */
+  max-width: 100%;
+}
+
+@media (min-width: 1000px) {
+  .admin-dashboard-main {
+    flex-direction: row;
+  }
+  .admin-dashboard-content {
+    padding: 40px 40px 40px 0;
+  }
+}
+
+/* Remove 100vw from any main container if present */
+.admin-dashboard-main, .view-more-projects-page, .project-list-container {
+  width: 100vw;
+  max-width: 100%;
 }
 
