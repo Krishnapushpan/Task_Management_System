@@ -69,7 +69,7 @@ const CreateUser = () => {
     <div className="create-user-wrapper">
       <div className="create-user-container">
         <div className="create-user-form-section">
-          <h2 className="create-user-title">Client Registration Form</h2>
+          <h2 className="create-user-title">Registration Form</h2>
           {error && <div className="error-message">{error}</div>}
           {success && <div className="success-message">{success}</div>}
           <form onSubmit={handleSubmit}>
