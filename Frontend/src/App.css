@@ -1021,3 +1021,77 @@ html, body {
   max-width: 100%;
 }
 
+/* Ensure the root HTML and body elements take up full height */
+html, body, #root, #app {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* Admin Dashboard Layout */
+.admin-dashboard-main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh; /* Full viewport height */
+  max-height: 100vh; /* Ensure it doesn't exceed viewport */
+  overflow: visible; /* Changed from hidden to visible to show content */
+  background-color: #f5f7fa;
+}
+
+/* Content area with scrolling */
+.admin-dashboard-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  width: 100%;
+  max-width: 100%;
+  overflow-y: auto; /* Allow scrolling within content */
+  height: 100%;
+}
+
+/* Sidebar adjustments */
+.sidebar {
+  width: 260px;
+  min-width: 220px;
+  max-width: 260px;
+  background: #202940;
+  color: #c3cbe4;
+  height: 100vh; /* Full viewport height */
+  overflow-y: auto; /* Allow scrolling in sidebar if needed */
+  position: sticky;
+  top: 0;
+  flex-shrink: 0; /* Prevent sidebar from shrinking */
+}
+
+/* Responsive layout */
+@media (min-width: 1000px) {
+  .admin-dashboard-main {
+    flex-direction: row;
+  }
+  
+  .admin-dashboard-content {
+    padding: 40px;
+    width: calc(100% - 260px); /* Adjust width accounting for sidebar */
+  }
+}
+
+/* Ensure content containers don't overflow */
+.count-users-container, 
+.project-list-container, 
+.upcoming-projects-container {
+  width: 100%;
+  max-width: 100%;
+  overflow: visible; /* Changed from hidden to visible */
+}
+
+/* Adjust inner scrollable areas if needed */
+.project-list-table, 
+.upcoming-cards {
+  width: 100%;
+  overflow-x: auto; /* Allow horizontal scrolling for tables if needed */
+}
