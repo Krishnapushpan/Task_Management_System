@@ -5,6 +5,8 @@ import {
   getWorkAssignmentsByProject,
   updateWorkAssignmentStatus,
   deleteWorkAssignment,
+  // getPersonalWork,
+  getUserWorkAssignments
 } from "../controllers/AssignWorkController.js";
 import { verifyToken } from "../../Middleware/auth.js";
 
@@ -14,15 +16,18 @@ const router = express.Router();
 router.post("/create", verifyToken, createWorkAssignment);
 
 // Get all work assignments
-router.get("/all", verifyToken, getAllWorkAssignments);
+// router.get("/all", verifyToken, getAllWorkAssignments);
 
 // Get work assignments by project ID
-router.get("/project/:projectId", verifyToken, getWorkAssignmentsByProject);
+// router.get("/project/:projectId", verifyToken, getWorkAssignmentsByProject);
 
 // Update work assignment status
 router.put("/:id/status", verifyToken, updateWorkAssignmentStatus);
 
 // Delete work assignment
 router.delete("/:id", verifyToken, deleteWorkAssignment);
+
+// Get personal work assignments for a user (userId as path param)
+router.get("/personal", getUserWorkAssignments);
 
 export default router;

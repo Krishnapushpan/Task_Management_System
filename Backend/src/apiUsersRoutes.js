@@ -16,6 +16,6 @@ router.use("/projects", projectRoutes);
 router.use("/teams", assignTeamRoutes);
 
 // Assign Work routes
-router.use("/assignments", assignWorkRoutes);
+router.use("/works", assignWorkRoutes);
 
 export default router;

@@ -145,3 +145,60 @@ export const deleteWorkAssignment = async (req, res) => {
     });
   }
 };
+
+export const getPersonalWork = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    console.log("userId", userId);
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+
+    // Find assignments where the user is a team member or student
+    const assignments = await AssignWork.find({
+      $or: [
+        { teamMembers: userId },
+        { students: userId }
+      ]
+    })
+      .populate("project", "projectName description startDate endDate")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json(assignments);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to get personal work", error: error.message });
+  }
+};
+
+// Get all work assignments for a specific user (team member or student)
+export const getUserWorkAssignments = async (req, res) => {
+  try {
+    // You can use req.query.userId or req.params.userId depending on your route
+    const userId = req.params.userId || req.query.userId;
+    console.log("userId", userId);
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+
+    // Find assignments where the user is a team member or student
+    const assignments = await AssignWork.find({
+      $or: [
+        { teamMembers: userId },
+        { students: userId }
+      ]
+    })
+      .populate("projectName", "projectName description startDate endDate")
+      .populate("teamMembers", "fullName email role position")
+      .populate("students", "fullName email role")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json(assignments);
+    console.log("assignments", assignments);
+  } catch (error) {
+    console.error("Get user work assignments error:", error);
+    res.status(500).json({
+      message: "Failed to get user work assignments",
+      error: error.message,
+    });
+  }
+};

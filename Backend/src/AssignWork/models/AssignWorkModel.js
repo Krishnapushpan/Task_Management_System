@@ -29,7 +29,7 @@ const assignWorkSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ["Pending", "In Progress", "Completed"],
-    default: "Pending",
+    default: "In Progress",
   },
   dueDate: {
     type: Date,
