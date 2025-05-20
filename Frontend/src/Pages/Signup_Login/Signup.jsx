@@ -57,7 +57,7 @@ const Signup = () => {
       <div className="login-container">
         {/* Left Info Card */}
         <div className="login-info-card">
-          <div className="login-info-title">TECHAUTH</div>
+          <div className="login-info-title">TASKIFY</div>
           <div className="login-info-heading">Create your client account</div>
           <div className="login-info-desc">
             Sign up to get started and connect with our platform as a client.

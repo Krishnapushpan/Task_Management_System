@@ -3,6 +3,7 @@ import userRoutes from "./User/routes/UsersRoute.js";
 import projectRoutes from "./Project/routes/ProjectRoute.js";
 import assignTeamRoutes from "./AssignTeam/routes/AssignTeamRoute.js";
 import assignWorkRoutes from "./AssignWork/routes/AssignWorkRoute.js";
+import workCountRoutes from "./WorkCount/routes/WorkCountRoute.js";
 
 const router = express.Router();
 
@@ -17,5 +18,8 @@ router.use("/teams", assignTeamRoutes);
 
 // Assign Work routes
 router.use("/works", assignWorkRoutes);
+
+// Work Count routes
+router.use("/work", workCountRoutes);
 
 export default router;

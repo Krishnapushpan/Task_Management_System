@@ -37,7 +37,7 @@ const Login = () => {
       <div className="login-container">
         {/* Left Info Card */}
         <div className="login-info-card">
-          <div className="login-info-title">TECHAUTH</div>
+          <div className="login-info-title">TASKIFY</div>
           <div className="login-info-heading">We're here to help you level up.</div>
           <div className="login-info-desc">
             It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.

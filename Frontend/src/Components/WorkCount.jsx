@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { FaTasks, FaCheckCircle, FaHourglassHalf, FaSpinner } from "react-icons/fa";
+import {
+  FaTasks,
+  FaCheckCircle,
+  FaHourglassHalf,
+  FaSpinner,
+  FaExclamationTriangle,
+} from "react-icons/fa";
 import axios from "axios";
 
-const WorkCount = () => {
+const WorkCount = ({ userId }) => {
   const [counts, setCounts] = useState({
     totalAssigned: 0,
     completed: 0,
@@ -16,26 +22,45 @@ const WorkCount = () => {
     const fetchCounts = async () => {
       try {
         setLoading(true);
-        // Replace with your actual API endpoint for work stats
-        // const response = await axios.get("/api/work/counts", { withCredentials: true });
-        // if (response.data && response.data.counts) {
-        //   setCounts(response.data.counts);
-        // }
-        // For now, use placeholder values
-        setCounts({
-          totalAssigned: 25,
-          completed: 10,
-          pending: 8,
-          inProgress: 7,
-        });
+        setError("");
+
+        let response;
+
+        // If userId is provided, fetch counts for that specific user
+        if (userId) {
+          response = await axios.get(`/api/work/user/${userId}/counts`, {
+            withCredentials: true,
+          });
+        } else {
+          // Otherwise fetch global counts (for admin dashboard)
+          response = await axios.get("/api/work/counts", {
+            withCredentials: true,
+          });
+        }
+
+        if (response.data && response.data.counts) {
+          setCounts(response.data.counts);
+        } else {
+          throw new Error("Invalid response format");
+        }
       } catch (err) {
+        console.error("Error fetching work counts:", err);
         setError("Failed to load work stats");
+
+        // Fallback to placeholder values in case of error
+        setCounts({
+          totalAssigned: 0,
+          completed: 0,
+          pending: 0,
+          inProgress: 0,
+        });
       } finally {
         setLoading(false);
       }
     };
+
     fetchCounts();
-  }, []);
+  }, [userId]);
 
   const stats = [
     {
@@ -67,13 +92,38 @@ const WorkCount = () => {
   if (loading) {
     return (
       <div className="count-users-container loading">
-        Loading work statistics...
+        <FaSpinner className="spinning" /> Loading work statistics...
       </div>
     );
   }
 
   if (error) {
-    return <div className="count-users-container error">{error}</div>;
+    return (
+      <div className="count-users-container error">
+        <FaExclamationTriangle /> {error}
+      </div>
+    );
+  }
+
+  // If all counts are zero, show a message
+  const allZero =
+    counts.totalAssigned === 0 &&
+    counts.completed === 0 &&
+    counts.pending === 0 &&
+    counts.inProgress === 0;
+
+  if (allZero) {
+    return (
+      <div className="count-users-container empty">
+        <div className="empty-message">
+          <FaTasks className="empty-icon" />
+          <p>
+            No work assignments found. Assignments will appear here once
+            created.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (
