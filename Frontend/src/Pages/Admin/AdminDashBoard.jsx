@@ -9,6 +9,7 @@ import ClientList from "../UserList/ClientList";
 import StudentList from "../UserList/StudentList";
 import TeamMember from "../UserList/TeamMember";
 import Teamlead from "../UserList/Teamlead";
+import PersonalWork from "../PersonalWork/PersonalWork";
 
 const AdminDashBoard = () => {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -49,8 +50,12 @@ const AdminDashBoard = () => {
             <div style={{ marginTop: "20px" }}>
               <UpcommingProject />
             </div>
+           
             <div style={{ marginTop: "20px" }}>
               <ProjectList />
+            </div>
+            <div style={{ marginTop: "20px" }}>
+              <PersonalWork />
             </div>
           </>
         )}
