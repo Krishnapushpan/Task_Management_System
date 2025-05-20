@@ -48,7 +48,7 @@ const PersonalWork = () => {
 
   const handleStatusChange = async (workId, newStatus) => {
     try {
-      await axios.patch(`/api/works/${workId}/status`, { status: newStatus }, { withCredentials: true });
+      await axios.put(`/api/works/${workId}/status`, { status: newStatus }, { withCredentials: true });
       setWorks((prev) =>
         prev.map((w) =>
           w._id === workId
