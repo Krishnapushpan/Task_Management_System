@@ -28,6 +28,10 @@ const Home = () => {
     navigate('/login');
   };
 
+  const handleSignUp = () => {
+    navigate('/signup');
+  };
+
   return (
     <div>
       {/* Header/Navbar */}
@@ -51,7 +55,7 @@ const Home = () => {
         <p>
           Prioritize. Organize. Manage. Repeat. With our task management software, your days of burnout are behind you. Spend more time completing your tasks and less time managing them, and enhance productivity at scale by tracking milestones, setting dependencies, and accomplishing task goals.
         </p>
-        <button className="get-started-btn">GET STARTED</button>
+        <button className="get-started-btn" onClick={handleSignUp}>GET STARTED</button>
       </section>
 
       {/* Features Section */}

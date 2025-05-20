@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   FaTachometerAlt,
@@ -13,19 +13,19 @@ import {
   FaMapMarkerAlt,
   FaShareAlt,
   FaSignOutAlt,
+  FaUserPlus,
 } from "react-icons/fa";
-import CreateDropdown from "../Components/Dropdowns/CreateDropdown";
 import Userdropdown from "../Components/Dropdowns/Userdropdown";
 
 const Sidebar = ({ onItemClick }) => {
   const navigate = useNavigate();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [userRole, setUserRole] = useState(null);
+  const sidebarRef = useRef(null);
 
   useEffect(() => {
     // Get user data from localStorage
-    const userData = localStorage.getItem('user');
+    const userData = localStorage.getItem("user");
     if (userData) {
       const { role } = JSON.parse(userData);
       setUserRole(role);
@@ -34,19 +34,19 @@ const Sidebar = ({ onItemClick }) => {
 
   const handleLogout = () => {
     // Remove user data from localStorage
-    localStorage.removeItem('user');
+    localStorage.removeItem("user");
     // Clear browser history and navigate to home page
-    window.history.pushState(null, '', '/');
-    navigate('/', { replace: true });
+    window.history.pushState(null, "", "/");
+    navigate("/", { replace: true });
   };
 
   return (
-    <div className="sidebar">
+    <div className="sidebar" ref={sidebarRef}>
       <div className="sidebar-header">
         <span className="sidebar-logo">
           {" "}
           <span className="logo-icon" />{" "}
-          <span className="logo-text">Velonic</span>{" "}
+          <span className="logo-text">Taskify</span>{" "}
         </span>
       </div>
       <div className="sidebar-section sidebar-main">Main</div>
@@ -54,37 +54,25 @@ const Sidebar = ({ onItemClick }) => {
         <li
           className={onItemClick ? undefined : "active"}
           onClick={() => onItemClick && onItemClick("Dashboard")}
-          style={{ cursor: 'pointer' }}
+          style={{ cursor: "pointer" }}
         >
           <FaTachometerAlt className="sidebar-icon" />
           <span>Dashboard</span>
           {/* <span className="sidebar-badge blue">9+</span> */}
         </li>
-        {userRole === 'admin' && (
-          <>
-            <li
-              onClick={() => setDropdownOpen((open) => !open)}
-              style={{ color: dropdownOpen ? "#64c5b1" : undefined }}
-            >
-              <FaFileAlt className="sidebar-icon" />
-              <span>Add User</span>
-              <span
-                className="sidebar-arrow"
-                style={{
-                  transform: dropdownOpen ? "rotate(90deg)" : "none",
-                  color: dropdownOpen ? "#64c5b1" : undefined,
-                }}
-              >
-                &#8250;
-              </span>
-            </li>
-            <CreateDropdown visible={dropdownOpen} onItemClick={onItemClick} />
-          </>
+        {userRole === "admin" && (
+          <li
+            onClick={() => onItemClick && onItemClick("Add Client")}
+            style={{ cursor: "pointer" }}
+          >
+            <FaUserPlus className="sidebar-icon" />
+            <span>Add User</span>
+          </li>
         )}
-        { (userRole === 'admin' || userRole === 'Client') && (
+        {(userRole === "admin" || userRole === "Client") && (
           <li
             onClick={() => onItemClick && onItemClick("Add Project")}
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
           >
             <FaLayerGroup className="sidebar-icon" />
             <span>Add Project</span>
@@ -110,23 +98,18 @@ const Sidebar = ({ onItemClick }) => {
           </span>
         </li>
         <Userdropdown visible={userDropdownOpen} onItemClick={onItemClick} />
-        {/* <li>
-          <FaLayerGroup className="sidebar-icon" />
-          <span></span>
-          <span className="sidebar-badge yellow">New</span>
-        </li> */}
       </ul>
       {/* Logout Button */}
       <div className="sidebar-footer">
         <li
           onClick={handleLogout}
-          style={{ 
-            cursor: 'pointer',
-            color: '#dc3545',
-            display: 'flex',
-            alignItems: 'center',
-            padding: '10px 15px',
-            marginTop: 'auto'
+          style={{
+            cursor: "pointer",
+            color: "#dc3545",
+            display: "flex",
+            alignItems: "center",
+            padding: "10px 15px",
+            marginTop: "auto",
           }}
         >
           <FaSignOutAlt className="sidebar-icon" />

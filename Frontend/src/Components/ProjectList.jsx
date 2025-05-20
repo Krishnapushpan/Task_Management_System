@@ -19,6 +19,7 @@ const ProjectList = () => {
   const [editingStatusId, setEditingStatusId] = useState(null);
   const [statusUpdate, setStatusUpdate] = useState("");
   const [user, setUser] = useState(null);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,14 +28,19 @@ const ProjectList = () => {
         setIsLoading(true);
         const userData = JSON.parse(localStorage.getItem("user"));
         let response;
-        
+
         if (userData?.role === "admin") {
           // Admin: fetch all assignments
-          response = await axios.get("/api/teams/all", { withCredentials: true });
+          response = await axios.get("/api/teams/all", {
+            withCredentials: true,
+          });
         } else {
           // Others: fetch only relevant assignments
           const userId = userData?.userid;
-          response = await axios.get(`/api/teams/user-assignments?userId=${userId}`, { withCredentials: true });
+          response = await axios.get(
+            `/api/teams/user-assignments?userId=${userId}`,
+            { withCredentials: true }
+          );
         }
         setAssignments(response.data);
       } catch (err) {
@@ -43,14 +49,22 @@ const ProjectList = () => {
         setIsLoading(false);
       }
     };
-    
+
     fetchAssignments();
-    
+
     // Get user from localStorage
     const userData = JSON.parse(localStorage.getItem("user"));
     console.log("Logged in user ID:", userData?.userid);
     console.log("Full user data:", userData);
     setUser(userData);
+
+    // Set up window resize listener for responsive design
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const formatDate = (dateString) => {
@@ -64,14 +78,27 @@ const ProjectList = () => {
   };
 
   // Function to refresh the project list
-  const handleRefresh = () => {
+  const handleRefresh = async () => {
     setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const userData = JSON.parse(localStorage.getItem("user"));
+      let response;
+
+      if (userData?.role === "admin") {
+        response = await axios.get("/api/teams/all", { withCredentials: true });
+      } else {
+        const userId = userData?.userid;
+        response = await axios.get(
+          `/api/teams/user-assignments?userId=${userId}`,
+          { withCredentials: true }
+        );
+      }
+      setAssignments(response.data);
+    } catch (err) {
+      console.error("Error refreshing data:", err);
+    } finally {
       setIsLoading(false);
-      // You could reload data from your API here
-      console.log("Project list refreshed");
-    }, 1000);
+    }
   };
 
   // Function to minimize the project list
@@ -119,7 +146,8 @@ const ProjectList = () => {
     return null;
   }
 
-  if (isLoading) return <div>Loading...</div>;
+  // Determine if we should show the compact view
+  const isCompactView = windowWidth < 768;
 
   return (
     <div className="project-list-container">
@@ -154,105 +182,152 @@ const ProjectList = () => {
         </div>
       </div>
 
-      {!isMinimized && (
-        <table className="project-list-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Project Name</th>
-              <th>Description</th>
-              <th>Start Date</th>
-              <th>Due Date</th>
-              <th>Status</th>
-              <th>Team Lead</th>
-              <th>Team Members</th>
-              <th>Students</th>
-            </tr>
-          </thead>
-          <tbody>
-            {assignments.map((a, idx) => {
-              const isTeamLead =
-                user &&
-                a.teamLead &&
-                (user._id === a.teamLead._id ||
-                  user.email === a.teamLead.email);
-              return (
-                <tr key={a._id}>
-                  <td>{idx + 1}</td>
-                  <td>{a.projectName || a.project?.projectName}</td>
-                  <td>{a.description || a.project?.description}</td>
-                  <td>{formatDate(a.startDate || a.project?.startDate)}</td>
-                  <td>{formatDate(a.dueDate || a.project?.endDate)}</td>
-                  <td>
-                    {editingStatusId === a._id ? (
-                      <select
-                        className="status-dropdown"
-                        value={statusUpdate}
-                        onChange={(e) => {
-                          setStatusUpdate(e.target.value);
-                          handleStatusChange(a._id, e.target.value);
-                        }}
-                        autoFocus
-                      >
-                        {statusOptions.map((opt) => (
-                          <option key={opt} value={opt}>
-                            {opt}
-                          </option>
-                        ))}
-                      </select>
-                    ) : (
-                      <>
-                        {a.status || a.project?.status || "N/A"}
-                        {isTeamLead && (
-                          <>
-                            <button
-                              className="status-edit-btn"
-                              onClick={() => handleEditClick(a)}
-                            >
-                              Edit
-                            </button>
-                            <button
-                              className="assign-work-btn"
-                              style={{ marginLeft: "8px" }}
-                              onClick={() =>
-                                navigate(`/assign-work/${a._id}`, {
-                                  state: {
-                                    projectName:
-                                      a.projectName || a.project?.projectName,
-                                    description:
-                                      a.description || a.project?.description,
-                                    startDate:
-                                      a.startDate || a.project?.startDate,
-                                    endDate: a.dueDate || a.project?.endDate,
-                                    projectId: a._id,
-                                    project: a.project,
-                                  },
-                                })
-                              }
-                            >
-                              Assign Work
-                            </button>
-                          </>
-                        )}
-                      </>
-                    )}
-                  </td>
-                  <td>{a.teamLead?.fullName || "N/A"}</td>
-                  <td>
-                    {a.teamMembers && a.teamMembers.length > 0
-                      ? a.teamMembers.map((m) => m.fullName).join(", ")
-                      : "N/A"}
-                  </td>
-                  <td>
-                    {a.students && a.students.length > 0
-                      ? a.students.map((s) => s.fullName).join(", ")
-                      : "N/A"}
-                  </td>
+      {isLoading ? (
+        <div style={{ textAlign: "center", padding: "20px" }}>
+          Loading projects...
+        </div>
+      ) : (
+        !isMinimized && (
+          <div className="table-responsive">
+            <table className="project-list-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Project Name</th>
+                  {!isCompactView && <th>Description</th>}
+                  <th>Start Date</th>
+                  <th>Due Date</th>
+                  <th>Status</th>
+                  {!isCompactView && <th>Team Lead</th>}
+                  {!isCompactView && <th>Team Members</th>}
+                  {!isCompactView && <th>Students</th>}
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
+              </thead>
+              <tbody>
+                {assignments.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={isCompactView ? 5 : 9}
+                      style={{ textAlign: "center" }}
+                    >
+                      No projects found
+                    </td>
+                  </tr>
+                ) : (
+                  assignments.map((a, idx) => {
+                    const isTeamLead =
+                      user &&
+                      a.teamLead &&
+                      (user._id === a.teamLead._id ||
+                        user.email === a.teamLead.email);
+                    return (
+                      <tr key={a._id}>
+                        <td>{idx + 1}</td>
+                        <td>
+                          {a.projectName || a.project?.projectName}
+                          {isCompactView && (
+                            <div
+                              style={{
+                                fontSize: "11px",
+                                color: "#777",
+                                marginTop: "4px",
+                              }}
+                            >
+                              Lead: {a.teamLead?.fullName || "N/A"}
+                            </div>
+                          )}
+                        </td>
+                        {!isCompactView && (
+                          <td>{a.description || a.project?.description}</td>
+                        )}
+                        <td>
+                          {formatDate(a.startDate || a.project?.startDate)}
+                        </td>
+                        <td>{formatDate(a.dueDate || a.project?.endDate)}</td>
+                        <td>
+                          {editingStatusId === a._id ? (
+                            <select
+                              className="status-dropdown"
+                              value={statusUpdate}
+                              onChange={(e) => {
+                                setStatusUpdate(e.target.value);
+                                handleStatusChange(a._id, e.target.value);
+                              }}
+                              autoFocus
+                            >
+                              {statusOptions.map((opt) => (
+                                <option key={opt} value={opt}>
+                                  {opt}
+                                </option>
+                              ))}
+                            </select>
+                          ) : (
+                            <>
+                              {a.status || a.project?.status || "N/A"}
+                              {isTeamLead && (
+                                <>
+                                  <button
+                                    className="status-edit-btn"
+                                    onClick={() => handleEditClick(a)}
+                                  >
+                                    Edit
+                                  </button>
+                                  <button
+                                    className="assign-work-btn"
+                                    style={
+                                      isCompactView ? {} : { marginLeft: "8px" }
+                                    }
+                                    onClick={() =>
+                                      navigate(`/assign-work/${a._id}`, {
+                                        state: {
+                                          projectName:
+                                            a.projectName ||
+                                            a.project?.projectName,
+                                          description:
+                                            a.description ||
+                                            a.project?.description,
+                                          startDate:
+                                            a.startDate || a.project?.startDate,
+                                          endDate:
+                                            a.dueDate || a.project?.endDate,
+                                          projectId: a._id,
+                                          project: a.project,
+                                        },
+                                      })
+                                    }
+                                  >
+                                    Assign Work
+                                  </button>
+                                </>
+                              )}
+                            </>
+                          )}
+                        </td>
+                        {!isCompactView && (
+                          <td>{a.teamLead?.fullName || "N/A"}</td>
+                        )}
+                        {!isCompactView && (
+                          <td>
+                            {a.teamMembers && a.teamMembers.length > 0
+                              ? a.teamMembers.map((m) => m.fullName).join(", ")
+                              : "N/A"}
+                          </td>
+                        )}
+                        {!isCompactView && (
+                          <td>
+                            {a.students && a.students.length > 0
+                              ? a.students.map((s) => s.fullName).join(", ")
+                              : "N/A"}
+                          </td>
+                        )}
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
+        )
       )}
     </div>
   );
