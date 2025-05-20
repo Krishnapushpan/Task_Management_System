@@ -424,6 +424,7 @@ body {
   height: auto !important;
   min-height: 0 !important;
   max-height: none !important;
+  overflow-x: auto;
 }
 
 .project-list-header {
@@ -431,12 +432,14 @@ body {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 
 .project-list-title {
   font-size: 16px;
   font-weight: 600;
   color: #323a46;
+  margin-bottom: 10px;
 }
 
 .project-list-actions {
@@ -447,22 +450,30 @@ body {
 .project-list-table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 650px;
 }
 
 .project-list-table th {
-  padding: 12px 18px;
+  padding: 12px 10px;
   text-align: left;
   border-bottom: 1px solid #e5e5e5;
   font-weight: 600;
   color: #6c757d;
   font-size: 13px;
+  white-space: nowrap;
 }
 
 .project-list-table td {
-  padding: 14px 18px;
+  padding: 14px 10px;
   border-bottom: 1px solid #f2f2f2;
   font-size: 14px;
   color: #444;
+  vertical-align: top;
+}
+
+.project-list-table td button {
+  margin-top: 5px;
+  display: inline-block;
 }
 
 .project-list-table tr:hover {
@@ -1094,4 +1105,152 @@ html, body, #root, #app {
 .upcoming-cards {
   width: 100%;
   overflow-x: auto; /* Allow horizontal scrolling for tables if needed */
+}
+
+/* Responsive Sidebar Styles */
+.sidebar-toggle {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 1000;
+  width: 46px;
+  height: 46px;
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+}
+
+.sidebar-toggle:hover {
+  opacity: 0.8;
+}
+
+.sidebar-toggle svg {
+  width: 24px;
+  height: 24px;
+}
+
+.sidebar-container {
+  position: fixed;
+  height: 100vh;
+  z-index: 999;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Mobile Sidebar States */
+.sidebar-container.closed {
+  transform: translateX(-100%);
+}
+
+.sidebar-container.open {
+  transform: translateX(0);
+}
+
+/* Admin Dashboard adjustments for mobile */
+@media (max-width: 999px) {
+  .admin-dashboard-content {
+    margin-left: 0;
+    width: 100%;
+    padding: 60px 15px 15px 15px;
+  }
+
+  .sidebar {
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+  }
+}
+
+@media (min-width: 1000px) {
+  .sidebar-container {
+    position: relative;
+    transform: translateX(0) !important;
+  }
+
+  .admin-dashboard-main {
+    flex-direction: row;
+  }
+  
+  .admin-dashboard-content {
+    padding: 40px;
+  }
+}
+
+/* Sidebar Overlay */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Enhanced responsive styles for Project List */
+@media (max-width: 1200px) {
+  .project-list-table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .project-list-table th,
+  .project-list-table td {
+    min-width: 120px;
+  }
+}
+
+@media (max-width: 768px) {
+  .project-list-container {
+    padding: 15px 10px;
+  }
+  
+  .project-list-table td {
+    font-size: 13px;
+    padding: 10px 8px;
+  }
+  
+  .project-list-table th {
+    padding: 10px 8px;
+    font-size: 12px;
+  }
+  
+  .status-edit-btn,
+  .assign-work-btn {
+    padding: 4px 10px;
+    font-size: 0.85rem;
+    display: block;
+    margin-top: 5px;
+    margin-left: 0 !important;
+  }
+  
+  .project-list-actions {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .project-list-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .project-list-actions {
+    align-self: flex-end;
+    margin-top: -30px;
+  }
+  
+  .project-list-table td,
+  .project-list-table th {
+    padding: 8px 6px;
+    font-size: 12px;
+  }
 }

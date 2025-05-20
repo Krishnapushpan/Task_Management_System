@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "../../Layouts/Sidebar";
 import CountUsers from "../../Components/CountUsers";
 import ProjectList from "../../Components/ProjectList";
@@ -9,17 +9,60 @@ import ClientList from "../UserList/ClientList";
 import StudentList from "../UserList/StudentList";
 import TeamMember from "../UserList/TeamMember";
 import Teamlead from "../UserList/Teamlead";
+import MenuIcon from "../../assets/menu-icon";
 
 const AdminDashBoard = () => {
   const [selectedItem, setSelectedItem] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1000);
+
+  // Handle window resize to detect mobile view
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1000);
+      if (window.innerWidth >= 1000) {
+        setSidebarOpen(true);
+      } else {
+        setSidebarOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Set initial state
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleItemClick = (item) => {
     setSelectedItem(item);
+    if (isMobile) {
+      setSidebarOpen(false); // Close sidebar on selection in mobile view
+    }
+  };
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
   };
 
   return (
     <div className="admin-dashboard-main">
-      <Sidebar onItemClick={handleItemClick} />
+      {/* Mobile Menu Button */}
+      {isMobile && (
+        <button className="sidebar-toggle" onClick={toggleSidebar}>
+          <MenuIcon />
+        </button>
+      )}
+
+      {/* Sidebar Overlay - only shown when sidebar is open on mobile */}
+      {isMobile && sidebarOpen && (
+        <div className="sidebar-overlay" onClick={toggleSidebar}></div>
+      )}
+
+      {/* Sidebar - conditionally shown on mobile */}
+      <div className={`sidebar-container ${sidebarOpen ? "open" : "closed"}`}>
+        <Sidebar onItemClick={handleItemClick} />
+      </div>
+
       <div className="admin-dashboard-content">
         {selectedItem === "Add Client" ? (
           <CreateUser />

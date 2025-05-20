@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   FaTachometerAlt,
@@ -21,6 +21,7 @@ const Sidebar = ({ onItemClick }) => {
   const navigate = useNavigate();
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [userRole, setUserRole] = useState(null);
+  const sidebarRef = useRef(null);
 
   useEffect(() => {
     // Get user data from localStorage
@@ -40,7 +41,7 @@ const Sidebar = ({ onItemClick }) => {
   };
 
   return (
-    <div className="sidebar">
+    <div className="sidebar" ref={sidebarRef}>
       <div className="sidebar-header">
         <span className="sidebar-logo">
           {" "}
@@ -97,11 +98,6 @@ const Sidebar = ({ onItemClick }) => {
           </span>
         </li>
         <Userdropdown visible={userDropdownOpen} onItemClick={onItemClick} />
-        {/* <li>
-          <FaLayerGroup className="sidebar-icon" />
-          <span></span>
-          <span className="sidebar-badge yellow">New</span>
-        </li> */}
       </ul>
       {/* Logout Button */}
       <div className="sidebar-footer">

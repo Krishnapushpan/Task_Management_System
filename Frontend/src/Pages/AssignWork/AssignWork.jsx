@@ -42,6 +42,17 @@ const AssignWork = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [existingAssignments, setExistingAssignments] = useState([]);
   const [showExisting, setShowExisting] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  // Track window resize for responsive adjustments
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Initialize with one empty assignment
   useEffect(() => {
@@ -209,7 +220,6 @@ const AssignWork = () => {
           }
         );
 
-        console.log("Existing assignments:", response.data);
         setExistingAssignments(response.data);
       } catch (err) {
         console.error("Error fetching existing assignments:", err);
@@ -325,15 +335,12 @@ const AssignWork = () => {
           assignmentData.priority = assignment.priority;
         }
 
-        console.log("Sending assignment data:", assignmentData);
-
         return axios.post("/api/assignments/create", assignmentData, {
           withCredentials: true,
         });
       });
 
       const results = await Promise.all(promises);
-      console.log("Assignment results:", results);
 
       setSuccessMessage(
         `${validAssignments.length} work assignment(s) created successfully!`
@@ -384,6 +391,9 @@ const AssignWork = () => {
     return allPeople.filter((person) => selectedMemberIds.includes(person._id));
   };
 
+  // Check if we're on a mobile screen
+  const isMobile = windowWidth <= 768;
+
   if (isLoading) {
     return (
       <div className="assign-work-page">
@@ -412,9 +422,9 @@ const AssignWork = () => {
   return (
     <div className="assign-work-page">
       <div className="assign-work-header">
-        <h1>Assign Work</h1>
+        <h1>{isMobile ? "Assign Work" : "Assign Work to Team"}</h1>
         <button onClick={handleGoBack} className="back-button">
-          <FaArrowLeft /> Back
+          <FaArrowLeft /> {isMobile ? "Back" : "Return to Dashboard"}
         </button>
       </div>
 
@@ -427,18 +437,20 @@ const AssignWork = () => {
         <div className="project-details">
           <h2>{project?.projectName || project?.name || "Unknown Project"}</h2>
           <p>{project?.description || "No description available"}</p>
-          {project?.startDate && (
-            <p>
-              <strong>Start Date:</strong>{" "}
-              {new Date(project.startDate).toLocaleDateString()}
-            </p>
-          )}
-          {project?.endDate && (
-            <p>
-              <strong>End Date:</strong>{" "}
-              {new Date(project.endDate).toLocaleDateString()}
-            </p>
-          )}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
+            {project?.startDate && (
+              <p>
+                <strong>Start Date:</strong>{" "}
+                {new Date(project.startDate).toLocaleDateString()}
+              </p>
+            )}
+            {project?.endDate && (
+              <p>
+                <strong>End Date:</strong>{" "}
+                {new Date(project.endDate).toLocaleDateString()}
+              </p>
+            )}
+          </div>
 
           {existingAssignments.length > 0 && (
             <div className="existing-assignments-toggle">
@@ -522,13 +534,13 @@ const AssignWork = () => {
         <form onSubmit={handleSubmit} className="assign-work-form">
           <div className="assignments-list">
             <div className="assignments-header">
-              <h3>Work Assignments</h3>
+              <h3>New Work Assignments</h3>
               <button
                 type="button"
                 onClick={addNewAssignment}
                 className="add-assignment-btn"
               >
-                <FaPlus /> Add Assignment
+                <FaPlus /> {isMobile ? "Add" : "Add Assignment"}
               </button>
             </div>
 
@@ -542,6 +554,7 @@ const AssignWork = () => {
                         type="button"
                         onClick={() => removeAssignment(assignment.id)}
                         className="remove-assignment-btn"
+                        aria-label="Remove assignment"
                       >
                         <FaTimes />
                       </button>
@@ -564,7 +577,7 @@ const AssignWork = () => {
                           )
                         }
                         placeholder="Enter the work to be assigned..."
-                        rows={3}
+                        rows={isMobile ? 2 : 3}
                         required
                       />
                     </div>
@@ -645,6 +658,9 @@ const AssignWork = () => {
                                       person._id
                                     )
                                   }
+                                  aria-label={`Select ${
+                                    person.fullName || person.name
+                                  }`}
                                 />
                                 <div className="person-avatar">
                                   {getInitials(person.fullName || person.name)}
@@ -691,6 +707,9 @@ const AssignWork = () => {
                                       )
                                     }
                                     className="remove-person-btn"
+                                    aria-label={`Remove ${
+                                      person.fullName || person.name
+                                    }`}
                                   >
                                     <FaTimes />
                                   </button>
@@ -721,11 +740,13 @@ const AssignWork = () => {
             >
               {isSaving ? (
                 <>
-                  <FaSync className="spinning" /> Assigning Work...
+                  <FaSync className="spinning" />{" "}
+                  {isMobile ? "Saving..." : "Assigning Work..."}
                 </>
               ) : (
                 <>
-                  <FaCheckCircle /> Assign All Work
+                  <FaCheckCircle />{" "}
+                  {isMobile ? "Assign Work" : "Assign All Work"}
                 </>
               )}
             </button>
