@@ -1,10 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if user is already logged in
+    const user = localStorage.getItem("user");
+    if (user) {
+      // Redirect to dashboard if already authenticated
+      navigate("/admin-dashboard");
+    }
+  }, [navigate]);
 
   const handleAddTask = (e) => {
     e.preventDefault();

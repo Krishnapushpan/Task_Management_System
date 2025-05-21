@@ -10,6 +10,7 @@ import AssignTeam from "./Pages/AssignTeam/AssignTeam";
 import Login from "./Pages/Signup_Login/Login";
 import Signup from "./Pages/Signup_Login/Signup";
 import AssignWork from "./Pages/AssignWork/AssignWork";
+import ProtectedRoute from "./Components/ProtectedRoute";
 // import UserList from "./Pages/UserList";
 function App() {
   return (
@@ -45,14 +46,42 @@ function App() {
       {/* <Routes>{allRoutes}</Routes> */}
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/admin-dashboard" element={<AdminDashBoard />} />
-        {/* <Route path="/user-list" element={<UserList />} /> */}
-
-        <Route path="/view-more-projects" element={<ViewMoreProjects />} />
-        <Route path="/assign-project/:projectId" element={<AssignTeam />} />
-        <Route path="/assign-work/:projectId" element={<AssignWork />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+
+        {/* Protected Routes */}
+        <Route
+          path="/admin-dashboard"
+          element={
+            <ProtectedRoute>
+              <AdminDashBoard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/view-more-projects"
+          element={
+            <ProtectedRoute>
+              <ViewMoreProjects />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/assign-project/:projectId"
+          element={
+            <ProtectedRoute>
+              <AssignTeam />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/assign-work/:projectId"
+          element={
+            <ProtectedRoute>
+              <AssignWork />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </div>
   );

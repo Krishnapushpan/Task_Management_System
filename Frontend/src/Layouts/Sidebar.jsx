@@ -16,6 +16,7 @@ import {
   FaUserPlus,
 } from "react-icons/fa";
 import Userdropdown from "../Components/Dropdowns/Userdropdown";
+import { logout, getUserRole } from "../utils/auth";
 
 const Sidebar = ({ onItemClick }) => {
   const navigate = useNavigate();
@@ -24,20 +25,19 @@ const Sidebar = ({ onItemClick }) => {
   const sidebarRef = useRef(null);
 
   useEffect(() => {
-    // Get user data from localStorage
-    const userData = localStorage.getItem("user");
-    if (userData) {
-      const { role } = JSON.parse(userData);
-      setUserRole(role);
-    }
+    // Get user role from auth utility
+    setUserRole(getUserRole());
   }, []);
 
   const handleLogout = () => {
-    // Remove user data from localStorage
-    localStorage.removeItem("user");
-    // Clear browser history and navigate to home page
-    window.history.pushState(null, "", "/");
-    navigate("/", { replace: true });
+    // Use logout utility
+    logout(() => {
+      // Navigate to login page
+      navigate("/", { replace: true });
+
+      // Force page refresh to clear React Router's internal history
+      window.location.reload();
+    });
   };
 
   return (
