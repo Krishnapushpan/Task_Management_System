@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 import express, { json } from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import apiRoutes from "./src/apiUsersRoutes.js";
 import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
 
 dotenv.config();
 const app = express();
@@ -21,7 +21,7 @@ app.use(cookieParser());
 app.use("/api", apiRoutes);
 
 mongoose
-  .connect("mongodb://localhost:27017/Task_management")
+  .connect(process.env.MONGO_URI)
   .then(async () => {
     console.log("MongoDB Connected");
     const { createAdminUser } = await import("./src/server.js");
